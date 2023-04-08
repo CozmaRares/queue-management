@@ -1,9 +1,9 @@
-package com.raru.logic.strategy;
+package com.raru.model.strategy;
 
 import java.util.List;
 
 import com.raru.model.Server;
-import com.raru.model.Task;
+import com.raru.model.data.Task;
 
 public class ShortestQueueStrategy implements PartitionStrategy {
     @Override

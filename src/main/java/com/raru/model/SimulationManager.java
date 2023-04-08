@@ -1,10 +1,10 @@
-package com.raru.logic;
+package com.raru.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raru.logic.strategy.PartitionPolicy;
-import com.raru.model.Task;
+import com.raru.model.data.Task;
+import com.raru.model.strategy.PartitionPolicy;
 import com.raru.utils.Random;
 
 public class SimulationManager implements Runnable {

@@ -1,4 +1,4 @@
-package com.raru.model;
+package com.raru.model.data;
 
 public class Task {
     private static int counterID = 0;

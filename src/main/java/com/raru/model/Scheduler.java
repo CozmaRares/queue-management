@@ -1,14 +1,13 @@
-package com.raru.logic;
+package com.raru.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.raru.logic.strategy.PartitionPolicy;
-import com.raru.logic.strategy.PartitionStrategy;
-import com.raru.logic.strategy.ShortestQueueStrategy;
-import com.raru.logic.strategy.ShortestWaitingTimeStrategy;
-import com.raru.model.Server;
-import com.raru.model.Task;
+import com.raru.model.data.Task;
+import com.raru.model.strategy.PartitionPolicy;
+import com.raru.model.strategy.PartitionStrategy;
+import com.raru.model.strategy.ShortestQueueStrategy;
+import com.raru.model.strategy.ShortestWaitingTimeStrategy;
 
 public class Scheduler {
     private List<Server> servers;

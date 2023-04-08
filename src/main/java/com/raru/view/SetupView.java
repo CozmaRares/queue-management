@@ -5,7 +5,7 @@ import java.awt.Color;
 
 import javax.swing.*;
 
-import com.raru.logic.strategy.PartitionPolicy;
+import com.raru.model.strategy.PartitionPolicy;
 import com.raru.utils.NumberField;
 
 public class SetupView extends JFrame {

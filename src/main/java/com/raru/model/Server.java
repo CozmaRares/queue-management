@@ -1,5 +1,7 @@
 package com.raru.model;
 
+import static com.raru.model.SimulationManager.getTimeUnitDuration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -7,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.raru.logic.SimulationManager.getTimeUnitDuration;
+import com.raru.model.data.Task;
 
 public class Server implements Runnable {
     private BlockingQueue<Task> tasks;
