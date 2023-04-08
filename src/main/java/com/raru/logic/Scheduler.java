@@ -6,7 +6,7 @@ import java.util.List;
 import com.raru.logic.strategy.PartitionPolicy;
 import com.raru.logic.strategy.PartitionStrategy;
 import com.raru.logic.strategy.ShortestQueueStrategy;
-import com.raru.logic.strategy.ShortestTimeStrategy;
+import com.raru.logic.strategy.ShortestWaitingTimeStrategy;
 import com.raru.model.Server;
 import com.raru.model.Task;
 
@@ -22,8 +22,7 @@ public class Scheduler {
 
             servers.add(server);
 
-            var t = new Thread(server);
-            t.run();
+            new Thread(server).start();
         }
 
         this.setStrategy(policy);
@@ -32,7 +31,7 @@ public class Scheduler {
     public void setStrategy(PartitionPolicy policy) {
         switch (policy) {
             case SHORTEST_QUEUE -> this.strategy = new ShortestQueueStrategy();
-            case SHORTEST_TIME -> this.strategy = new ShortestTimeStrategy();
+            case SHORTEST_WAITING_TIME -> this.strategy = new ShortestWaitingTimeStrategy();
         }
     }
 
