@@ -2,14 +2,15 @@ package com.raru.model;
 
 import static com.raru.model.SimulationManager.getTimeUnitDuration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import com.raru.model.data.Task;
+import com.raru.model.data.Task.ReadOnlyTask;
 
 public class Server implements Runnable {
     private BlockingQueue<Task> tasks;
@@ -52,8 +53,11 @@ public class Server implements Runnable {
         return tasks.size();
     }
 
-    public List<Task> getTasks() {
-        return new ArrayList<>(tasks);
+    public List<ReadOnlyTask> getTasks() {
+        return tasks
+                .stream()
+                .map(task -> task.readonly())
+                .collect(Collectors.toList());
     }
 
     public void stop() {

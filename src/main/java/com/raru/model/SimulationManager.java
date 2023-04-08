@@ -3,6 +3,7 @@ package com.raru.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.raru.model.data.SimulationFrame;
 import com.raru.model.data.Task;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.utils.Random;
@@ -13,6 +14,7 @@ public class SimulationManager implements Runnable {
     private int timeLimit;
     private List<Task> tasks;
     private Scheduler scheduler;
+    private volatile SimulationFrame frame;
 
     public SimulationManager(
             int timeLimit,
@@ -78,7 +80,7 @@ public class SimulationManager implements Runnable {
             final int ct = currentTime++;
             tasks.removeIf(t -> t.getArrivalTime() == ct);
 
-            this.generateSnapShot();
+            frame = scheduler.takeSnapshot();
 
             try {
                 Thread.sleep(SimulationManager.timeUnitDuration);
@@ -87,9 +89,5 @@ public class SimulationManager implements Runnable {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-    public void generateSnapShot() {
-        throw new UnsupportedOperationException("unimplemented 'generateSnapShot'");
     }
 }

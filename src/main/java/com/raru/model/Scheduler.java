@@ -3,6 +3,7 @@ package com.raru.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.raru.model.data.SimulationFrame;
 import com.raru.model.data.Task;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.model.strategy.PartitionStrategy;
@@ -40,5 +41,13 @@ public class Scheduler {
 
     public void stop() {
         this.servers.forEach(s -> s.stop());
+    }
+
+    public SimulationFrame takeSnapshot() {
+        var frame = new SimulationFrame();
+
+        servers.forEach(server -> frame.addQueue(server.getTasks()));
+
+        return frame;
     }
 }

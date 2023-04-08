@@ -38,4 +38,20 @@ public class Task {
     public String toString() {
         return String.format("(%d, %d, %d)", this.id, this.arrivalTime, this.serviceTime);
     }
+
+    public ReadOnlyTask readonly() {
+        return new ReadOnlyTask(this.id, this.arrivalTime, this.serviceTime);
+    }
+
+    public static class ReadOnlyTask {
+        public final int id;
+        public final int arrivalTime;
+        public final int serviceTime;
+
+        public ReadOnlyTask(int id, int arrivalTime, int serviceTime) {
+            this.id = id;
+            this.arrivalTime = arrivalTime;
+            this.serviceTime = serviceTime;
+        }
+    }
 }
