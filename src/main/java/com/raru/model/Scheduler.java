@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.raru.model.data.SimulationFrame;
 import com.raru.model.data.Task;
+import com.raru.model.data.Task.ImmutableTask;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.model.strategy.PartitionStrategy;
 import com.raru.model.strategy.ShortestQueueStrategy;
@@ -12,6 +13,7 @@ import com.raru.model.strategy.ShortestWaitingTimeStrategy;
 
 public class Scheduler {
     private List<Server> servers;
+    private List<Thread> threads;
     private PartitionStrategy strategy;
 
     public Scheduler(int numberOfServers, PartitionPolicy policy) {
@@ -22,7 +24,9 @@ public class Scheduler {
 
             servers.add(server);
 
-            new Thread(server).start();
+            var t = new Thread(server);
+            threads.add(t);
+            t.start();
         }
 
         this.setStrategy(policy);
@@ -40,11 +44,11 @@ public class Scheduler {
     }
 
     public void stop() {
-        this.servers.forEach(s -> s.stop());
+        this.threads.forEach(t -> t.interrupt());
     }
 
-    public SimulationFrame takeSnapshot() {
-        var frame = new SimulationFrame();
+    public SimulationFrame takeSnapshot(List<ImmutableTask> remainingTasks) {
+        var frame = new SimulationFrame(remainingTasks);
 
         servers.forEach(server -> frame.addQueue(server.getTasks()));
 

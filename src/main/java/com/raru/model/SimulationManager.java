@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.raru.model.data.SimulationFrame;
-import com.raru.model.data.Task;
+import com.raru.model.data.Task.ImmutableTask;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.utils.Random;
 
@@ -12,7 +12,7 @@ public class SimulationManager implements Runnable {
     private static int timeUnitDuration = 1000;
 
     private int timeLimit;
-    private List<Task> tasks;
+    private List<ImmutableTask> tasks;
     private Scheduler scheduler;
     private volatile SimulationFrame frame;
 
@@ -25,6 +25,7 @@ public class SimulationManager implements Runnable {
             int numberOfTasks,
             int numberOfServers,
             PartitionPolicy policy) {
+
         this.timeLimit = timeLimit;
 
         this.tasks = SimulationManager.generateTasks(
@@ -45,20 +46,20 @@ public class SimulationManager implements Runnable {
         return SimulationManager.timeUnitDuration;
     }
 
-    public static List<Task> generateTasks(
+    public static List<ImmutableTask> generateTasks(
             int numberOfTasks,
             int maxServingTime,
             int minServingTime,
             int maxArrivalTime,
             int minArrivalTime) {
 
-        var tasks = new ArrayList<Task>(numberOfTasks);
+        var tasks = new ArrayList<ImmutableTask>(numberOfTasks);
 
         for (int i = 0; i < numberOfTasks; i++) {
             int servingTime = Random.integer(minServingTime, maxServingTime + 1);
             int arrivalTime = Random.integer(minArrivalTime, maxArrivalTime + 1);
 
-            tasks.add(new Task(arrivalTime, servingTime));
+            tasks.add(new ImmutableTask(arrivalTime, servingTime));
         }
 
         tasks.sort((a, b) -> a.getArrivalTime() - b.getArrivalTime());
@@ -80,7 +81,7 @@ public class SimulationManager implements Runnable {
             final int ct = currentTime++;
             tasks.removeIf(t -> t.getArrivalTime() == ct);
 
-            frame = scheduler.takeSnapshot();
+            frame = scheduler.takeSnapshot(tasks);
 
             try {
                 Thread.sleep(SimulationManager.timeUnitDuration);
@@ -89,5 +90,11 @@ public class SimulationManager implements Runnable {
                 Thread.currentThread().interrupt();
             }
         }
+
+        this.scheduler.stop();
+    }
+
+    public SimulationFrame getSimulationFrame() {
+        return frame;
     }
 }
