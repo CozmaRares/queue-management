@@ -39,10 +39,6 @@ public class Scheduler {
         this.strategy.addTask(servers, task);
     }
 
-    public List<Server> getServers() {
-        return servers;
-    }
-
     public void stop() {
         this.servers.forEach(s -> s.stop());
     }
