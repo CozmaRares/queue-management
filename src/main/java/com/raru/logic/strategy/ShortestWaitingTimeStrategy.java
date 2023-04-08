@@ -5,7 +5,7 @@ import java.util.List;
 import com.raru.model.Server;
 import com.raru.model.Task;
 
-public class ShortestTimeStrategy implements PartitionStrategy {
+public class ShortestWaitingTimeStrategy implements PartitionStrategy {
     @Override
     public void addTask(List<Server> servers, Task task) {
         Server idealServer = null;
