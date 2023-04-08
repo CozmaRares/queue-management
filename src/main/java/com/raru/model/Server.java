@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.raru.logic.SimulationManager.getTimeUnitDuration;
 
 public class Server implements Runnable {
     private BlockingQueue<Task> tasks;
     private AtomicInteger waitingTime;
+    private AtomicBoolean running;
 
     public Server() {
         tasks = new LinkedBlockingQueue<>();
         waitingTime = new AtomicInteger(0);
+        running = new AtomicBoolean(true);
     }
 
     public void addTask(Task task) {
@@ -23,11 +28,11 @@ public class Server implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (running.get()) {
                 Task task = tasks.take();
 
                 while (task.getServiceTime() > 0) {
-                    Thread.sleep(1);
+                    Thread.sleep(getTimeUnitDuration());
                     task.decreaseServiceTime();
                     waitingTime.decrementAndGet();
                 }
@@ -47,5 +52,9 @@ public class Server implements Runnable {
 
     public List<Task> getTasks() {
         return new ArrayList<>(tasks);
+    }
+
+    public void stop() {
+        running.set(false);
     }
 }

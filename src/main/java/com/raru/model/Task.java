@@ -1,19 +1,20 @@
 package com.raru.model;
 
-import java.util.UUID;
-
 public class Task {
-    private final String id;
+    private static int counterID = 0;
+
+    private final int id;
     private final int arrivalTime;
     private int serviceTime;
 
     public Task(int arrivalTime, int serviceTime) {
-        this.id = UUID.randomUUID().toString();
+        this.id = Task.counterID++;
+
         this.arrivalTime = arrivalTime;
         this.serviceTime = serviceTime;
     }
 
-    public String getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -33,4 +34,8 @@ public class Task {
         this.decreaseServiceTime(1);
     }
 
+    @Override
+    public String toString() {
+        return String.format("(%d, %d, %d)", this.id, this.arrivalTime, this.serviceTime);
+    }
 }

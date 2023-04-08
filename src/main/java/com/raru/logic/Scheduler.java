@@ -14,10 +14,10 @@ public class Scheduler {
     private List<Server> servers;
     private PartitionStrategy strategy;
 
-    public Scheduler(int numServers, PartitionPolicy strategy) {
-        servers = new ArrayList<>(numServers);
+    public Scheduler(int numberOfServers, PartitionPolicy policy) {
+        servers = new ArrayList<>(numberOfServers);
 
-        for (int i = 0; i < numServers; i++) {
+        for (int i = 0; i < numberOfServers; i++) {
             var server = new Server();
 
             servers.add(server);
@@ -26,11 +26,11 @@ public class Scheduler {
             t.run();
         }
 
-        this.setStrategy(strategy);
+        this.setStrategy(policy);
     }
 
-    public void setStrategy(PartitionPolicy strategy) {
-        switch (strategy) {
+    public void setStrategy(PartitionPolicy policy) {
+        switch (policy) {
             case SHORTEST_QUEUE -> this.strategy = new ShortestQueueStrategy();
             case SHORTEST_TIME -> this.strategy = new ShortestTimeStrategy();
         }
@@ -42,5 +42,9 @@ public class Scheduler {
 
     public List<Server> getServers() {
         return servers;
+    }
+
+    public void stop() {
+        this.servers.forEach(s -> s.stop());
     }
 }
