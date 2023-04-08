@@ -34,52 +34,52 @@ public class SetupView extends JFrame {
 
     public SetupView() {
         var timeLimitLabel = new JLabel("Time limit:");
-        timeLimitLabel.setBounds(column(0), row(0), COL0_WIDTH, ROW_HEIGHT);
+        timeLimitLabel.setBounds(col(0), row(0), COL0_WIDTH, ROW_HEIGHT);
 
         var maxServingTimeLabel = new JLabel("Max serving time:");
-        maxServingTimeLabel.setBounds(column(0), row(1), COL0_WIDTH, ROW_HEIGHT);
+        maxServingTimeLabel.setBounds(col(0), row(1), COL0_WIDTH, ROW_HEIGHT);
 
         var minServingTimeLabel = new JLabel("Min serving time:");
-        minServingTimeLabel.setBounds(column(0), row(2), COL0_WIDTH, ROW_HEIGHT);
+        minServingTimeLabel.setBounds(col(0), row(2), COL0_WIDTH, ROW_HEIGHT);
 
         var maxArrivalTimeLabel = new JLabel("Max arrival time:");
-        maxArrivalTimeLabel.setBounds(column(0), row(3), COL0_WIDTH, ROW_HEIGHT);
+        maxArrivalTimeLabel.setBounds(col(0), row(3), COL0_WIDTH, ROW_HEIGHT);
 
         var minArrivalTimeLabel = new JLabel("Min arrival time:");
-        minArrivalTimeLabel.setBounds(column(0), row(4), COL0_WIDTH, ROW_HEIGHT);
+        minArrivalTimeLabel.setBounds(col(0), row(4), COL0_WIDTH, ROW_HEIGHT);
 
         var numberOfTasksLabel = new JLabel("Number of tasks:");
-        numberOfTasksLabel.setBounds(column(0), row(5), COL0_WIDTH, ROW_HEIGHT);
+        numberOfTasksLabel.setBounds(col(0), row(5), COL0_WIDTH, ROW_HEIGHT);
 
         var numberOfServersLabel = new JLabel("Number of servers:");
-        numberOfServersLabel.setBounds(column(0), row(6), COL0_WIDTH, ROW_HEIGHT);
+        numberOfServersLabel.setBounds(col(0), row(6), COL0_WIDTH, ROW_HEIGHT);
 
         var policyLabel = new JLabel("Policy:");
-        policyLabel.setBounds(column(0), row(7), COL0_WIDTH, ROW_HEIGHT);
+        policyLabel.setBounds(col(0), row(7), COL0_WIDTH, ROW_HEIGHT);
 
         timeLimitField = new NumberField();
-        timeLimitField.setBounds(column(1), row(0), COL1_WIDTH, ROW_HEIGHT);
+        timeLimitField.setBounds(col(1), row(0), COL1_WIDTH, ROW_HEIGHT);
 
         maxServingTimeField = new NumberField();
-        maxServingTimeField.setBounds(column(1), row(1), COL1_WIDTH, ROW_HEIGHT);
+        maxServingTimeField.setBounds(col(1), row(1), COL1_WIDTH, ROW_HEIGHT);
 
         minServingTimeField = new NumberField();
-        minServingTimeField.setBounds(column(1), row(2), COL1_WIDTH, ROW_HEIGHT);
+        minServingTimeField.setBounds(col(1), row(2), COL1_WIDTH, ROW_HEIGHT);
 
         maxArrivalTimeField = new NumberField();
-        maxArrivalTimeField.setBounds(column(1), row(3), COL1_WIDTH, ROW_HEIGHT);
+        maxArrivalTimeField.setBounds(col(1), row(3), COL1_WIDTH, ROW_HEIGHT);
 
         minArrivalTimeField = new NumberField();
-        minArrivalTimeField.setBounds(column(1), row(4), COL1_WIDTH, ROW_HEIGHT);
+        minArrivalTimeField.setBounds(col(1), row(4), COL1_WIDTH, ROW_HEIGHT);
 
         numberOfTasksField = new NumberField();
-        numberOfTasksField.setBounds(column(1), row(5), COL1_WIDTH, ROW_HEIGHT);
+        numberOfTasksField.setBounds(col(1), row(5), COL1_WIDTH, ROW_HEIGHT);
 
         numberOfServersField = new NumberField();
-        numberOfServersField.setBounds(column(1), row(6), COL1_WIDTH, ROW_HEIGHT);
+        numberOfServersField.setBounds(col(1), row(6), COL1_WIDTH, ROW_HEIGHT);
 
         policyChoice = new Choice();
-        policyChoice.setBounds(column(1), row(7), COL1_WIDTH, ROW_HEIGHT);
+        policyChoice.setBounds(col(1), row(7), COL1_WIDTH, ROW_HEIGHT);
         policyChoice.setBackground(Color.WHITE);
 
         for (var policy : PartitionPolicy.values())
@@ -124,16 +124,16 @@ public class SetupView extends JFrame {
         return MARGIN_Y + rowNumber * (ROW_HEIGHT + ROW_GAP);
     }
 
-    private static int column(int colNumber) {
-        int col = 0;
+    private static int col(int colNumber) {
+        int column = 0;
 
         if (colNumber == 1)
-            col = COL0_WIDTH + COL_GAP;
+            column = COL0_WIDTH + COL_GAP;
 
         if (colNumber > 1)
-            col = COL0_WIDTH + COL_GAP + (colNumber - 1) * (COL1_WIDTH + COL_GAP);
+            column = COL0_WIDTH + COL_GAP + (colNumber - 1) * (COL1_WIDTH + COL_GAP);
 
-        return MARGIN_X + col;
+        return MARGIN_X + column;
     }
 
 }
