@@ -18,6 +18,7 @@ public class Scheduler {
 
     public Scheduler(int numberOfServers, PartitionPolicy policy) {
         servers = new ArrayList<>(numberOfServers);
+        threads = new ArrayList<>(numberOfServers);
 
         for (int i = 0; i < numberOfServers; i++) {
             var server = new Server();
@@ -47,8 +48,8 @@ public class Scheduler {
         this.threads.forEach(t -> t.interrupt());
     }
 
-    public SimulationFrame takeSnapshot(List<ImmutableTask> remainingTasks) {
-        var frame = new SimulationFrame(remainingTasks);
+    public SimulationFrame takeSnapshot(List<ImmutableTask> remainingTasks, int simulationTime) {
+        var frame = new SimulationFrame(remainingTasks, simulationTime);
 
         servers.forEach(server -> frame.addQueue(server.getTasks()));
 

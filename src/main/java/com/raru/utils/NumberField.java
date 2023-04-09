@@ -14,10 +14,11 @@ public class NumberField extends JFormattedTextField {
 
         numberFormatter = new NumberFormatter(format);
         numberFormatter.setValueClass(Long.class);
-        numberFormatter.setAllowsInvalid(false); // this is the key
+        numberFormatter.setAllowsInvalid(false);
     }
 
-    public NumberField() {
+    public NumberField(int defaultValue) {
         super(numberFormatter);
+        setValue(defaultValue);
     }
 }

@@ -2,6 +2,7 @@ package com.raru.view;
 
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
@@ -36,17 +37,17 @@ public class SetupView extends JFrame {
         var timeLimitLabel = new JLabel("Time limit:");
         timeLimitLabel.setBounds(col(0), row(0), COL0_WIDTH, ROW_HEIGHT);
 
-        var maxServingTimeLabel = new JLabel("Max serving time:");
-        maxServingTimeLabel.setBounds(col(0), row(1), COL0_WIDTH, ROW_HEIGHT);
-
         var minServingTimeLabel = new JLabel("Min serving time:");
-        minServingTimeLabel.setBounds(col(0), row(2), COL0_WIDTH, ROW_HEIGHT);
+        minServingTimeLabel.setBounds(col(0), row(1), COL0_WIDTH, ROW_HEIGHT);
 
-        var maxArrivalTimeLabel = new JLabel("Max arrival time:");
-        maxArrivalTimeLabel.setBounds(col(0), row(3), COL0_WIDTH, ROW_HEIGHT);
+        var maxServingTimeLabel = new JLabel("Max serving time:");
+        maxServingTimeLabel.setBounds(col(0), row(2), COL0_WIDTH, ROW_HEIGHT);
 
         var minArrivalTimeLabel = new JLabel("Min arrival time:");
-        minArrivalTimeLabel.setBounds(col(0), row(4), COL0_WIDTH, ROW_HEIGHT);
+        minArrivalTimeLabel.setBounds(col(0), row(3), COL0_WIDTH, ROW_HEIGHT);
+
+        var maxArrivalTimeLabel = new JLabel("Max arrival time:");
+        maxArrivalTimeLabel.setBounds(col(0), row(4), COL0_WIDTH, ROW_HEIGHT);
 
         var numberOfTasksLabel = new JLabel("Number of tasks:");
         numberOfTasksLabel.setBounds(col(0), row(5), COL0_WIDTH, ROW_HEIGHT);
@@ -57,25 +58,25 @@ public class SetupView extends JFrame {
         var policyLabel = new JLabel("Policy:");
         policyLabel.setBounds(col(0), row(7), COL0_WIDTH, ROW_HEIGHT);
 
-        timeLimitField = new NumberField();
+        timeLimitField = new NumberField(60);
         timeLimitField.setBounds(col(1), row(0), COL1_WIDTH, ROW_HEIGHT);
 
-        maxServingTimeField = new NumberField();
-        maxServingTimeField.setBounds(col(1), row(1), COL1_WIDTH, ROW_HEIGHT);
+        minServingTimeField = new NumberField(2);
+        minServingTimeField.setBounds(col(1), row(1), COL1_WIDTH, ROW_HEIGHT);
 
-        minServingTimeField = new NumberField();
-        minServingTimeField.setBounds(col(1), row(2), COL1_WIDTH, ROW_HEIGHT);
+        maxServingTimeField = new NumberField(30);
+        maxServingTimeField.setBounds(col(1), row(2), COL1_WIDTH, ROW_HEIGHT);
 
-        maxArrivalTimeField = new NumberField();
-        maxArrivalTimeField.setBounds(col(1), row(3), COL1_WIDTH, ROW_HEIGHT);
+        minArrivalTimeField = new NumberField(2);
+        minArrivalTimeField.setBounds(col(1), row(3), COL1_WIDTH, ROW_HEIGHT);
 
-        minArrivalTimeField = new NumberField();
-        minArrivalTimeField.setBounds(col(1), row(4), COL1_WIDTH, ROW_HEIGHT);
+        maxArrivalTimeField = new NumberField(4);
+        maxArrivalTimeField.setBounds(col(1), row(4), COL1_WIDTH, ROW_HEIGHT);
 
-        numberOfTasksField = new NumberField();
+        numberOfTasksField = new NumberField(4);
         numberOfTasksField.setBounds(col(1), row(5), COL1_WIDTH, ROW_HEIGHT);
 
-        numberOfServersField = new NumberField();
+        numberOfServersField = new NumberField(2);
         numberOfServersField.setBounds(col(1), row(6), COL1_WIDTH, ROW_HEIGHT);
 
         policyChoice = new Choice();
@@ -91,17 +92,17 @@ public class SetupView extends JFrame {
         add(timeLimitLabel);
         add(timeLimitField);
 
-        add(maxServingTimeLabel);
-        add(maxServingTimeField);
-
         add(minServingTimeLabel);
         add(minServingTimeField);
 
-        add(maxArrivalTimeLabel);
-        add(maxArrivalTimeField);
+        add(maxServingTimeLabel);
+        add(maxServingTimeField);
 
         add(minArrivalTimeLabel);
         add(minArrivalTimeField);
+
+        add(maxArrivalTimeLabel);
+        add(maxArrivalTimeField);
 
         add(numberOfServersLabel);
         add(numberOfServersField);
@@ -115,7 +116,6 @@ public class SetupView extends JFrame {
         add(startButton);
 
         setLayout(null);
-        setVisible(true);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -136,4 +136,39 @@ public class SetupView extends JFrame {
         return MARGIN_X + column;
     }
 
+    public String getTimeLimit() {
+        return timeLimitField.getText();
+    }
+
+    public String getMinServingTime() {
+        return minServingTimeField.getText();
+    }
+
+    public String getMaxServingTime() {
+        return maxServingTimeField.getText();
+    }
+
+    public String getMinArrivalTime() {
+        return minArrivalTimeField.getText();
+    }
+
+    public String getMaxArrivalTime() {
+        return maxArrivalTimeField.getText();
+    }
+
+    public String getNumberOfTasks() {
+        return numberOfTasksField.getText();
+    }
+
+    public String getNumberOfServers() {
+        return numberOfServersField.getText();
+    }
+
+    public int getSelectedPolicyIndex() {
+        return policyChoice.getSelectedIndex();
+    }
+
+    public void setStartButtonListener(ActionListener listener) {
+        startButton.addActionListener(listener);
+    }
 }

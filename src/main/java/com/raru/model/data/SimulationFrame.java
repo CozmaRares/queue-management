@@ -7,22 +7,28 @@ import com.raru.model.data.Task.ImmutableTask;
 
 public class SimulationFrame {
     private final List<List<ImmutableTask>> queues;
-    private final List<ImmutableTask> tasks;
+    private final List<ImmutableTask> remainingTasks;
+    private int simulationTime;
 
-    public SimulationFrame(List<ImmutableTask> remainingTasks) {
-        queues = new ArrayList<>();
-        tasks = remainingTasks;
+    public SimulationFrame(List<ImmutableTask> remainingTasks, int simulationTime) {
+        this.queues = new ArrayList<>();
+        this.remainingTasks = remainingTasks;
+        this.simulationTime = simulationTime;
     }
 
     public void addQueue(List<ImmutableTask> queue) {
-        queues.add(queue);
+        this.queues.add(queue);
     }
 
     public List<List<ImmutableTask>> getQueues() {
-        return queues;
+        return this.queues;
     }
 
     public List<ImmutableTask> getRemainingTasks() {
-        return tasks;
+        return this.remainingTasks;
+    }
+
+    public int getSimulationTime() {
+        return this.simulationTime;
     }
 }

@@ -30,7 +30,7 @@ public class Server implements Runnable {
     public void run() {
         try {
             while (true) {
-                MutableTask task = tasks.take();
+                MutableTask task = tasks.peek();
 
                 while (task.getServiceTime() > 0) {
                     Thread.sleep(getTimeUnitDuration());

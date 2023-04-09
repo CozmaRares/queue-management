@@ -2,6 +2,7 @@ package com.raru.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.raru.model.data.SimulationFrame;
 import com.raru.model.data.Task.ImmutableTask;
@@ -15,13 +16,15 @@ public class SimulationManager implements Runnable {
     private List<ImmutableTask> tasks;
     private Scheduler scheduler;
     private volatile SimulationFrame frame;
+    private AtomicBoolean newFrameAvailable;
+    private AtomicBoolean running;
 
     public SimulationManager(
             int timeLimit,
-            int maxServingTime,
             int minServingTime,
-            int maxArrivalTime,
+            int maxServingTime,
             int minArrivalTime,
+            int maxArrivalTime,
             int numberOfTasks,
             int numberOfServers,
             PartitionPolicy policy) {
@@ -30,12 +33,15 @@ public class SimulationManager implements Runnable {
 
         this.tasks = SimulationManager.generateTasks(
                 numberOfTasks,
-                maxServingTime,
                 minServingTime,
-                maxArrivalTime,
-                minArrivalTime);
+                maxServingTime,
+                minArrivalTime,
+                maxArrivalTime);
 
         this.scheduler = new Scheduler(numberOfServers, policy);
+
+        this.newFrameAvailable = new AtomicBoolean(false);
+        this.running = new AtomicBoolean(false);
     }
 
     public static void setTimeUnitDuration(int durationMs) {
@@ -48,10 +54,10 @@ public class SimulationManager implements Runnable {
 
     public static List<ImmutableTask> generateTasks(
             int numberOfTasks,
-            int maxServingTime,
             int minServingTime,
-            int maxArrivalTime,
-            int minArrivalTime) {
+            int maxServingTime,
+            int minArrivalTime,
+            int maxArrivalTime) {
 
         var tasks = new ArrayList<ImmutableTask>(numberOfTasks);
 
@@ -70,6 +76,8 @@ public class SimulationManager implements Runnable {
     public void run() {
         int currentTime = 0;
 
+        this.running.set(true);
+
         while (currentTime < timeLimit) {
             for (var task : tasks) {
                 if (task.getArrivalTime() != currentTime)
@@ -81,7 +89,8 @@ public class SimulationManager implements Runnable {
             final int ct = currentTime++;
             tasks.removeIf(t -> t.getArrivalTime() == ct);
 
-            frame = scheduler.takeSnapshot(tasks);
+            frame = scheduler.takeSnapshot(tasks, ct);
+            newFrameAvailable.set(true);
 
             try {
                 Thread.sleep(SimulationManager.timeUnitDuration);
@@ -91,10 +100,20 @@ public class SimulationManager implements Runnable {
             }
         }
 
+        this.running.set(false);
         this.scheduler.stop();
     }
 
+    public boolean isRunning() {
+        return running.get();
+    }
+
+    public boolean isNewFrameAvailable() {
+        return newFrameAvailable.get();
+    }
+
     public SimulationFrame getSimulationFrame() {
+        newFrameAvailable.set(false);
         return frame;
     }
 }
