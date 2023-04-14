@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import com.raru.model.SimulationManager;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.utils.Logger;
+import com.raru.utils.Logger.LogLevel;
 import com.raru.view.SetupView;
 import com.raru.view.SimulationView;
 
@@ -24,16 +25,22 @@ public class Controller {
             @Override
             public void actionPerformed(ActionEvent event) {
                 int timeLimit = Integer.parseInt(setupView.getTimeLimit());
+                int numberOfTasks = Integer.parseInt(setupView.getNumberOfTasks());
                 int minServingTime = Integer.parseInt(setupView.getMinServingTime());
                 int maxServingTime = Integer.parseInt(setupView.getMaxServingTime());
                 int minArrivalTime = Integer.parseInt(setupView.getMinArrivalTime());
                 int maxArrivalTime = Integer.parseInt(setupView.getMaxArrivalTime());
-                int numberOfTasks = Integer.parseInt(setupView.getNumberOfTasks());
                 int numberOfServers = Integer.parseInt(setupView.getNumberOfServers());
+                int timeUnitDuration = Integer.parseInt(setupView.getTimeUnitDuration());
+
+                String logFile = setupView.getLogFileName() + ".log";
+                LogLevel level = LogLevel.values()[setupView.getSelectedLogLevelIndex()];
                 PartitionPolicy policy = PartitionPolicy.values()[setupView.getSelectedPolicyIndex()];
 
-                Logger.openFile("log.txt");
-                Logger.setLevel(Logger.LogLevel.SIMULATION_FRAME);
+                Logger.setLevel(level);
+                Logger.openFile(logFile);
+
+                SimulationManager.setTimeUnitDuration(timeUnitDuration);
 
                 manager = new SimulationManager(
                         timeLimit,

@@ -44,6 +44,6 @@ public class Logger {
     }
 
     public enum LogLevel {
-        ALL, TASK_PARTITION, THREAD_LIFETIME, SIMULATION_FRAME
+        SIMULATION_FRAME, TASK_PARTITION, THREAD_LIFETIME, ALL
     }
 }

@@ -51,11 +51,10 @@ public class Server implements Runnable {
             while (running.get()) {
                 MutableTask task = tasks.peek();
 
-                sleep();
-
                 if (task == null)
                     continue;
 
+                sleep();
                 task.decreaseServiceTime();
                 waitingTime.decrementAndGet();
 
