@@ -89,7 +89,7 @@ public class SimulationManager implements Runnable {
         running.set(true);
         logStart();
 
-        while (currentTime < timeLimit && running.get()) {
+        while (currentTime <= timeLimit && running.get()) {
             for (var task : tasks) {
                 if (task.getArrivalTime() != currentTime)
                     break;
