@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.raru.model.Server;
 import com.raru.model.data.Task;
+import com.raru.utils.Logger;
+import com.raru.utils.Logger.LogLevel;
 
 public class ShortestWaitingTimeStrategy implements PartitionStrategy {
     @Override
@@ -20,8 +22,10 @@ public class ShortestWaitingTimeStrategy implements PartitionStrategy {
             }
         }
 
-        if (idealServer != null)
+        if (idealServer != null) {
+            Logger.logLine("Task " + task + " dispatched to server " + idealServer, LogLevel.TASK_PARTITION);
             idealServer.addTask(task);
+        }
     }
 
 }

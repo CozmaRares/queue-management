@@ -1,6 +1,6 @@
 package com.raru.model.data;
 
-public abstract class Task {
+public class Task {
     private static int counterID = 0;
 
     protected int id;
@@ -40,10 +40,6 @@ public abstract class Task {
         return new MutableTask(id, arrivalTime, serviceTime);
     }
 
-    public ImmutableTask toImmutable() {
-        return new ImmutableTask(id, arrivalTime, serviceTime);
-    }
-
     public static class MutableTask extends Task {
         protected MutableTask(int id, int arrivalTime, int serviceTime) {
             super(id, arrivalTime, serviceTime);
@@ -59,16 +55,6 @@ public abstract class Task {
 
         public void decreaseServiceTime() {
             this.decreaseServiceTime(1);
-        }
-    }
-
-    public static class ImmutableTask extends Task {
-        protected ImmutableTask(int id, int arrivalTime, int serviceTime) {
-            super(id, arrivalTime, serviceTime);
-        }
-
-        public ImmutableTask(int arrivalTime, int serviceTime) {
-            super(arrivalTime, serviceTime);
         }
     }
 }

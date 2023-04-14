@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import com.raru.model.SimulationManager;
 import com.raru.model.strategy.PartitionPolicy;
+import com.raru.utils.Logger;
 import com.raru.view.SetupView;
 import com.raru.view.SimulationView;
 
@@ -30,6 +31,9 @@ public class Controller {
                 int numberOfTasks = Integer.parseInt(setupView.getNumberOfTasks());
                 int numberOfServers = Integer.parseInt(setupView.getNumberOfServers());
                 PartitionPolicy policy = PartitionPolicy.values()[setupView.getSelectedPolicyIndex()];
+
+                Logger.openFile("log.txt");
+                Logger.setLevel(Logger.LogLevel.SIMULATION_FRAME);
 
                 manager = new SimulationManager(
                         timeLimit,
@@ -61,8 +65,14 @@ public class Controller {
         simulationView.setStopButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                managerThread.interrupt();
+                try {
+                    manager.stop();
+                    managerThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
+                Logger.closeFile();
                 setupView.setVisible(true);
                 simulationView.setVisible(false);
             }

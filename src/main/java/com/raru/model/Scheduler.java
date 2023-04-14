@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.raru.model.data.SimulationFrame;
 import com.raru.model.data.Task;
-import com.raru.model.data.Task.ImmutableTask;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.model.strategy.PartitionStrategy;
 import com.raru.model.strategy.ShortestQueueStrategy;
@@ -30,25 +29,33 @@ public class Scheduler {
             t.start();
         }
 
-        this.setStrategy(policy);
+        setStrategy(policy);
     }
 
     public void setStrategy(PartitionPolicy policy) {
         switch (policy) {
-            case SHORTEST_QUEUE -> this.strategy = new ShortestQueueStrategy();
-            case SHORTEST_WAITING_TIME -> this.strategy = new ShortestWaitingTimeStrategy();
+            case SHORTEST_QUEUE -> strategy = new ShortestQueueStrategy();
+            case SHORTEST_WAITING_TIME -> strategy = new ShortestWaitingTimeStrategy();
         }
     }
 
     public void dispatchTask(Task task) {
-        this.strategy.addTask(servers, task);
+        strategy.addTask(servers, task);
     }
 
     public void stop() {
-        this.threads.forEach(t -> t.interrupt());
+        servers.forEach(s -> s.stop());
+
+        threads.forEach(t -> {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    public SimulationFrame takeSnapshot(List<ImmutableTask> remainingTasks, int simulationTime) {
+    public SimulationFrame takeSnapshot(List<Task> remainingTasks, int simulationTime) {
         var frame = new SimulationFrame(remainingTasks, simulationTime);
 
         servers.forEach(server -> frame.addQueue(server.getTasks()));

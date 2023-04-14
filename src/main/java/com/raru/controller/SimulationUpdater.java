@@ -4,6 +4,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.raru.model.data.SimulationFrame;
+import com.raru.utils.Logger;
+import com.raru.utils.Logger.LogLevel;
 
 public class SimulationUpdater implements Runnable {
     private Supplier<Boolean> isApplicationRunning;
@@ -22,36 +24,49 @@ public class SimulationUpdater implements Runnable {
         this.setFrame = setFrame;
     }
 
+    private void logStart() {
+        Logger.logLine("SimulationUpdater started: " + this, LogLevel.THREAD_LIFETIME);
+    }
+
+    private void logFinish() {
+        Logger.logLine("SimulationUpdater finished: " + this, LogLevel.THREAD_LIFETIME);
+    }
+
     @Override
     public void run() {
+        this.logStart();
+
         while (isApplicationRunning.get()) {
             if (isFrameAvailable.get()) {
                 var frame = getFrame.get();
 
-                System.out.println("Time: " + frame.getSimulationTime());
+                Logger.logLine("Time: " + frame.getSimulationTime(), LogLevel.SIMULATION_FRAME);
 
-                System.out.print("Tasks: ");
+                Logger.log("Remaining tasks: ", LogLevel.SIMULATION_FRAME);
 
                 for (var task : frame.getRemainingTasks())
-                    System.out.print(task + " ");
-                System.out.println();
+                    Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
+                Logger.logLine("", LogLevel.SIMULATION_FRAME);
 
+                int idx = 0;
                 for (var q : frame.getQueues()) {
-                    System.out.print("Q: ");
+                    Logger.log("Queue " + (++idx) + ": ", LogLevel.SIMULATION_FRAME);
 
                     for (var task : q)
-                        System.out.print(task + " ");
+                        Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
 
-                    System.out.println();
+                    Logger.logLine("", LogLevel.SIMULATION_FRAME);
                 }
 
-                System.out.println();
-                System.out.println();
-                System.out.println();
+                Logger.logLine("", LogLevel.SIMULATION_FRAME);
+                Logger.logLine("", LogLevel.SIMULATION_FRAME);
+                Logger.logLine("", LogLevel.SIMULATION_FRAME);
 
                 setFrame.accept(frame);
             }
         }
+
+        this.logFinish();
     }
 
 }

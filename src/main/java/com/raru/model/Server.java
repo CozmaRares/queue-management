@@ -2,45 +2,79 @@ package com.raru.model;
 
 import static com.raru.model.SimulationManager.getTimeUnitDuration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
-import com.raru.model.data.Task.MutableTask;
 import com.raru.model.data.Task;
-import com.raru.model.data.Task.ImmutableTask;
+import com.raru.model.data.Task.MutableTask;
+import com.raru.utils.Logger;
+import com.raru.utils.Logger.LogLevel;
 
 public class Server implements Runnable {
     private BlockingQueue<MutableTask> tasks;
     private AtomicInteger waitingTime;
+    private AtomicBoolean running;
 
     public Server() {
         tasks = new LinkedBlockingQueue<>();
         waitingTime = new AtomicInteger(0);
+        running = new AtomicBoolean(true);
     }
 
     public void addTask(Task task) {
+        Logger.logLine("Server " + this + " received task " + task, LogLevel.TASK_PARTITION);
         tasks.add(task.toMutable());
         waitingTime.addAndGet(task.getServiceTime());
     }
 
+    private void logStart() {
+        Logger.logLine("Server started: " + this, LogLevel.THREAD_LIFETIME);
+    }
+
+    private void logFinish() {
+        Logger.logLine("Server finished: " + this, LogLevel.THREAD_LIFETIME);
+    }
+
+    private void sleep() throws InterruptedException {
+        Thread.sleep(getTimeUnitDuration());
+    }
+
     @Override
     public void run() {
+        logStart();
+
         try {
-            while (true) {
+            while (running.get()) {
                 MutableTask task = tasks.peek();
 
-                while (task.getServiceTime() > 0) {
-                    Thread.sleep(getTimeUnitDuration());
-                    task.decreaseServiceTime();
-                    waitingTime.decrementAndGet();
+                sleep();
+
+                if (task == null)
+                    continue;
+
+                task.decreaseServiceTime();
+                waitingTime.decrementAndGet();
+
+                if (task.getServiceTime() == 0) {
+                    tasks.take();
                 }
+
             }
         } catch (InterruptedException e) {
+            logFinish();
+            stop();
             Thread.currentThread().interrupt();
         }
+
+        logFinish();
+    }
+
+    public void stop() {
+        running.set(false);
     }
 
     public int getWaitingTime() {
@@ -51,11 +85,7 @@ public class Server implements Runnable {
         return tasks.size();
     }
 
-    public List<ImmutableTask> getTasks() {
-        return tasks
-                .stream()
-                .map(task -> task.toImmutable())
-                .collect(Collectors.toList());
+    public List<Task> getTasks() {
+        return new ArrayList<>(tasks);
     }
-
 }
