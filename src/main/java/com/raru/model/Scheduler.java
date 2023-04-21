@@ -19,6 +19,11 @@ public class Scheduler {
         servers = new ArrayList<>(numberOfServers);
         threads = new ArrayList<>(numberOfServers);
 
+        switch (policy) {
+            case SHORTEST_QUEUE -> strategy = new ShortestQueueStrategy();
+            case SHORTEST_WAITING_TIME -> strategy = new ShortestWaitingTimeStrategy();
+        }
+
         for (int i = 0; i < numberOfServers; i++) {
             var server = new Server();
 
@@ -27,15 +32,6 @@ public class Scheduler {
             var t = new Thread(server);
             threads.add(t);
             t.start();
-        }
-
-        setStrategy(policy);
-    }
-
-    public void setStrategy(PartitionPolicy policy) {
-        switch (policy) {
-            case SHORTEST_QUEUE -> strategy = new ShortestQueueStrategy();
-            case SHORTEST_WAITING_TIME -> strategy = new ShortestWaitingTimeStrategy();
         }
     }
 
