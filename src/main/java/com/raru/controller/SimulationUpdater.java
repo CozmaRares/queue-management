@@ -37,33 +37,41 @@ public class SimulationUpdater implements Runnable {
         this.logStart();
 
         while (isApplicationRunning.get()) {
-            if (isFrameAvailable.get()) {
-                var frame = getFrame.get();
+            if (!isFrameAvailable.get())
+                continue;
 
-                Logger.logLine("Time: " + frame.getSimulationTime(), LogLevel.SIMULATION_FRAME);
+            var frame = getFrame.get();
 
-                Logger.log("Remaining tasks: ", LogLevel.SIMULATION_FRAME);
+            Logger.logLine("Time: " + frame.getSimulationTime(), LogLevel.SIMULATION_FRAME);
 
-                for (var task : frame.getRemainingTasks())
+            Logger.log("Remaining tasks: ", LogLevel.SIMULATION_FRAME);
+
+            if (frame.getRemainingTasks().size() == 0)
+                Logger.log("none", LogLevel.SIMULATION_FRAME);
+
+            for (var task : frame.getRemainingTasks())
+                Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
+
+            Logger.logLine("", LogLevel.SIMULATION_FRAME);
+
+            int idx = 0;
+            for (var q : frame.getQueues()) {
+                Logger.log("Queue " + (++idx) + ": ", LogLevel.SIMULATION_FRAME);
+
+                if (q.size() == 0)
+                    Logger.log("closed", LogLevel.SIMULATION_FRAME);
+
+                for (var task : q)
                     Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
-                Logger.logLine("", LogLevel.SIMULATION_FRAME);
-
-                int idx = 0;
-                for (var q : frame.getQueues()) {
-                    Logger.log("Queue " + (++idx) + ": ", LogLevel.SIMULATION_FRAME);
-
-                    for (var task : q)
-                        Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
-
-                    Logger.logLine("", LogLevel.SIMULATION_FRAME);
-                }
 
                 Logger.logLine("", LogLevel.SIMULATION_FRAME);
-                Logger.logLine("", LogLevel.SIMULATION_FRAME);
-                Logger.logLine("", LogLevel.SIMULATION_FRAME);
-
-                setFrame.accept(frame);
             }
+
+            Logger.logLine("", LogLevel.SIMULATION_FRAME);
+            Logger.logLine("", LogLevel.SIMULATION_FRAME);
+            Logger.logLine("", LogLevel.SIMULATION_FRAME);
+
+            setFrame.accept(frame);
         }
 
         this.logFinish();

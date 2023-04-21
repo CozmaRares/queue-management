@@ -13,7 +13,7 @@ public class SimulationView extends JFrame {
     private static final int ROW_GAP = 10;
     private static final int COL_GAP = 10;
 
-    private static final int COL_WIDTH = 100;
+    private static final int COL_WIDTH = 150;
     private static final int ROW_HEIGHT = 30;
 
     // private static final int WINDOW_WIDTH = MARGIN_X * 2 + COL_GAP + COL0_WIDTH +
@@ -44,15 +44,19 @@ public class SimulationView extends JFrame {
     public void setFrame(SimulationFrame frame) {
         getContentPane().removeAll();
 
-        var l = new JLabel("" + frame.getSimulationTime());
+        var l = new JLabel("Time: " + frame.getSimulationTime());
         l.setBounds(col(0), row(0), COL_WIDTH, ROW_HEIGHT);
         add(l);
 
         var remainingTasks = frame.getRemainingTasks();
 
+        l = new JLabel("Remaining tasks");
+        l.setBounds(col(0), row(1), COL_WIDTH, ROW_HEIGHT);
+        add(l);
+
         for (int i = 0; i < remainingTasks.size(); i++) {
             l = new JLabel(remainingTasks.get(i).toString());
-            l.setBounds(col(i + 1), row(0), COL_WIDTH, ROW_HEIGHT);
+            l.setBounds(col(i + 1), row(1), COL_WIDTH, ROW_HEIGHT);
             add(l);
         }
 
@@ -62,17 +66,17 @@ public class SimulationView extends JFrame {
             var queue = queues.get(i);
 
             l = new JLabel("Server " + (i + 1));
-            l.setBounds(col(0), row(i + 1), COL_WIDTH, ROW_HEIGHT);
+            l.setBounds(col(0), row(i + 2), COL_WIDTH, ROW_HEIGHT);
             add(l);
 
             for (int j = 0; j < queue.size(); j++) {
                 l = new JLabel(queue.get(j).toString());
-                l.setBounds(col(j + 1), row(i + 1), COL_WIDTH, ROW_HEIGHT);
+                l.setBounds(col(j + 1), row(i + 2), COL_WIDTH, ROW_HEIGHT);
                 add(l);
             }
         }
 
-        stopButton.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(queues.size() + 1), COL_WIDTH, ROW_HEIGHT);
+        stopButton.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(queues.size() + 2), COL_WIDTH, ROW_HEIGHT);
         add(stopButton);
 
         validate();
