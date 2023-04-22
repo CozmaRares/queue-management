@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import com.raru.model.data.SimulationFrame;
+import com.raru.utils.Logger;
+import com.raru.utils.Logger.LogLevel;
 
 public class SimulationView extends JFrame {
     private static final int MARGIN_X = 10;
@@ -44,37 +46,65 @@ public class SimulationView extends JFrame {
     public void setFrame(SimulationFrame frame) {
         getContentPane().removeAll();
 
+        Logger.logLine("Time: " + frame.getSimulationTime(), LogLevel.SIMULATION_FRAME);
+
         var l = new JLabel("Time: " + frame.getSimulationTime());
         l.setBounds(col(0), row(0), COL_WIDTH, ROW_HEIGHT);
         add(l);
 
         var remainingTasks = frame.getRemainingTasks();
 
+        Logger.log("Remaining tasks: ", LogLevel.SIMULATION_FRAME);
+
         l = new JLabel("Remaining tasks");
         l.setBounds(col(0), row(1), COL_WIDTH, ROW_HEIGHT);
         add(l);
 
+        if (frame.getRemainingTasks().size() == 0)
+            Logger.log("none", LogLevel.SIMULATION_FRAME);
+
         for (int i = 0; i < remainingTasks.size(); i++) {
-            l = new JLabel(remainingTasks.get(i).toString());
+            var task = remainingTasks.get(i);
+
+            Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
+
+            l = new JLabel(task.toString());
             l.setBounds(col(i + 1), row(1), COL_WIDTH, ROW_HEIGHT);
             add(l);
         }
 
+        Logger.logLine("", LogLevel.SIMULATION_FRAME);
+
         var queues = frame.getQueues();
 
         for (int i = 0; i < queues.size(); i++) {
+            Logger.log("Queue " + i + ": ", LogLevel.SIMULATION_FRAME);
+
             var queue = queues.get(i);
 
-            l = new JLabel("Server " + (i + 1));
+            if (queue.size() == 0)
+                Logger.log("closed", LogLevel.SIMULATION_FRAME);
+
+            l = new JLabel("Queue " + (i + 1));
             l.setBounds(col(0), row(i + 2), COL_WIDTH, ROW_HEIGHT);
             add(l);
 
             for (int j = 0; j < queue.size(); j++) {
-                l = new JLabel(queue.get(j).toString());
+                var task = queue.get(j);
+
+                Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
+
+                l = new JLabel(task.toString());
                 l.setBounds(col(j + 1), row(i + 2), COL_WIDTH, ROW_HEIGHT);
                 add(l);
             }
+
+            Logger.logLine("", LogLevel.SIMULATION_FRAME);
         }
+
+        Logger.logLine("", LogLevel.SIMULATION_FRAME);
+        Logger.logLine("", LogLevel.SIMULATION_FRAME);
+        Logger.logLine("", LogLevel.SIMULATION_FRAME);
 
         stopButton.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(queues.size() + 2), COL_WIDTH, ROW_HEIGHT);
         add(stopButton);
