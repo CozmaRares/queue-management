@@ -7,7 +7,7 @@ public class Task {
     protected int arrivalTime;
     protected int serviceTime;
 
-    private Task(int id, int arrivalTime, int serviceTime) {
+    protected Task(int id, int arrivalTime, int serviceTime) {
         this.id = id;
         this.arrivalTime = arrivalTime;
         this.serviceTime = serviceTime;
@@ -49,12 +49,13 @@ public class Task {
             super(arrivalTime, serviceTime);
         }
 
-        public void decreaseServiceTime(int delta) {
-            this.serviceTime -= delta;
+        public void decreaseServiceTime() {
+            this.serviceTime--;
         }
 
-        public void decreaseServiceTime() {
-            this.decreaseServiceTime(1);
+        @Override
+        public MutableTask toMutable() {
+            return this;
         }
     }
 }
