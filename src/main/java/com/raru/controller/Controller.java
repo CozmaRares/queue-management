@@ -15,7 +15,6 @@ public class Controller {
     private SimulationView simulationView;
     private SimulationManager manager;
     private Thread managerThread;
-    private SimulationUpdater updater;
 
     public Controller() {
         setupView = new SetupView();
@@ -57,7 +56,7 @@ public class Controller {
                 managerThread = new Thread(manager);
                 managerThread.start();
 
-                updater = new SimulationUpdater(
+                var updater = new SimulationUpdater(
                         manager::isRunning,
                         manager::isNewFrameAvailable,
                         manager::getSimulationFrame,

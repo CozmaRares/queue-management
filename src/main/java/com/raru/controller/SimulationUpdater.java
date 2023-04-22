@@ -43,6 +43,8 @@ public class SimulationUpdater implements Runnable {
             setFrame.accept(getFrame.get());
         }
 
+        setFrame.accept(null);
+
         this.logFinish();
     }
 

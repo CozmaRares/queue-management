@@ -118,6 +118,11 @@ public class SimulationManager implements Runnable {
             frame = scheduler.takeSnapshot(tasks, currentTime++);
             newFrameAvailable.set(true);
 
+            if (frame.isEmpty()) {
+                running.set(false);
+                break;
+            }
+
             try {
                 Thread.sleep(SimulationManager.timeUnitDuration);
             } catch (InterruptedException e) {
@@ -126,6 +131,7 @@ public class SimulationManager implements Runnable {
                 scheduler.stop();
                 Thread.currentThread().interrupt();
             }
+
         }
 
         logFinish();

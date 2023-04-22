@@ -8,14 +8,18 @@ public class SimulationFrame {
     private final List<List<Task>> queues;
     private final List<Task> remainingTasks;
     private int simulationTime;
+    private boolean isEmpty;
 
     public SimulationFrame(Collection<Task> remainingTasks, int simulationTime) {
         this.queues = new ArrayList<>();
         this.remainingTasks = new ArrayList<>(remainingTasks);
         this.simulationTime = simulationTime;
+        this.isEmpty = remainingTasks.size() == 0;
     }
 
     public void addQueue(List<Task> queue) {
+        this.isEmpty = this.isEmpty && queue.size() == 0;
+
         this.queues.add(queue);
     }
 
@@ -29,5 +33,9 @@ public class SimulationFrame {
 
     public int getSimulationTime() {
         return this.simulationTime;
+    }
+
+    public boolean isEmpty() {
+        return this.isEmpty;
     }
 }

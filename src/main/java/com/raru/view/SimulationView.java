@@ -46,6 +46,28 @@ public class SimulationView extends JFrame {
     public void setFrame(SimulationFrame frame) {
         getContentPane().removeAll();
 
+        if (frame == null)
+            updateFrameFinished();
+        else
+            updateFrame(frame);
+
+        validate();
+        repaint();
+    }
+
+    private void updateFrameFinished() {
+        Logger.logLine("Finished", LogLevel.SIMULATION_FRAME);
+
+        var l = new JLabel("Finished");
+        l.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(1), COL_WIDTH, ROW_HEIGHT);
+        add(l);
+
+        stopButton.setText("Return to Setup");
+        stopButton.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(2), COL_WIDTH, ROW_HEIGHT);
+        add(stopButton);
+    }
+
+    private void updateFrame(SimulationFrame frame) {
         Logger.logLine("Time: " + frame.getSimulationTime(), LogLevel.SIMULATION_FRAME);
 
         var l = new JLabel("Time: " + frame.getSimulationTime());
@@ -111,9 +133,6 @@ public class SimulationView extends JFrame {
 
         stopButton.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(queues.size() + 2), COL_WIDTH, ROW_HEIGHT);
         add(stopButton);
-
-        validate();
-        repaint();
     }
 
     public void setStopButtonListener(ActionListener listener) {
