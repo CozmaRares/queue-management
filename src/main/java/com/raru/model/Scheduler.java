@@ -1,6 +1,7 @@
 package com.raru.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.raru.model.data.SimulationFrame;
@@ -35,8 +36,8 @@ public class Scheduler {
         }
     }
 
-    public void dispatchTask(Task task) {
-        strategy.addTask(servers, task);
+    public boolean dispatchTask(Task task) {
+        return strategy.addTask(servers, task);
     }
 
     public void stop() {
@@ -51,7 +52,7 @@ public class Scheduler {
         });
     }
 
-    public SimulationFrame takeSnapshot(List<Task> remainingTasks, int simulationTime) {
+    public SimulationFrame takeSnapshot(Collection<Task> remainingTasks, int simulationTime) {
         var frame = new SimulationFrame(remainingTasks, simulationTime);
 
         servers.forEach(server -> frame.addQueue(server.getTasks()));

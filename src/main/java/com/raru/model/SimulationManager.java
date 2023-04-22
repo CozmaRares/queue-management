@@ -1,21 +1,23 @@
 package com.raru.model;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.raru.model.data.SimulationFrame;
 import com.raru.model.data.Task;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.utils.Logger;
-import com.raru.utils.Random;
+import com.raru.utils.Util;
 import com.raru.utils.Logger.LogLevel;
 
 public class SimulationManager implements Runnable {
     private static int timeUnitDuration = 1000;
+    private static int maxQueueSize = 5;
 
     private int timeLimit;
-    private List<Task> tasks;
+    private Queue<Task> tasks;
     private Scheduler scheduler;
     private volatile SimulationFrame frame;
     private AtomicBoolean newFrameAvailable;
@@ -54,7 +56,17 @@ public class SimulationManager implements Runnable {
         return SimulationManager.timeUnitDuration;
     }
 
-    public static List<Task> generateTasks(
+    public static void setMaxQueueSize(int maxQueueSize) {
+        SimulationManager.maxQueueSize = maxQueueSize;
+    }
+
+    public static int getMaxQueueSize() {
+        return SimulationManager.maxQueueSize != -1
+                ? SimulationManager.maxQueueSize
+                : Integer.MAX_VALUE;
+    }
+
+    public static Queue<Task> generateTasks(
             int numberOfTasks,
             int minServingTime,
             int maxServingTime,
@@ -64,14 +76,15 @@ public class SimulationManager implements Runnable {
         var tasks = new ArrayList<Task>(numberOfTasks);
 
         for (int i = 0; i < numberOfTasks; i++) {
-            int servingTime = Random.integer(minServingTime, maxServingTime + 1);
-            int arrivalTime = Random.integer(minArrivalTime, maxArrivalTime + 1);
+            int servingTime = Util.randomInt(minServingTime, maxServingTime + 1);
+            int arrivalTime = Util.randomInt(minArrivalTime, maxArrivalTime + 1);
 
             tasks.add(new Task(arrivalTime, servingTime));
         }
 
         tasks.sort((a, b) -> a.getArrivalTime() - b.getArrivalTime());
-        return tasks;
+
+        return new LinkedList<>(tasks);
     }
 
     private void logStart() {
@@ -90,25 +103,27 @@ public class SimulationManager implements Runnable {
         logStart();
 
         while (currentTime <= timeLimit && running.get()) {
-            for (var task : tasks) {
-                if (task.getArrivalTime() != currentTime)
+            var task = tasks.peek();
+
+            while (task != null && task.getArrivalTime() <= currentTime) {
+                Logger.logLine("Dispatching task: " + task, LogLevel.TASK_PARTITION);
+
+                if (!scheduler.dispatchTask(task))
                     break;
 
-                Logger.logLine("Dispatching task: " + task, LogLevel.TASK_PARTITION);
-                scheduler.dispatchTask(task);
+                tasks.remove();
+                task = tasks.peek();
             }
 
-            final int ct = currentTime++;
-            tasks.removeIf(t -> t.getArrivalTime() == ct);
-
-            frame = scheduler.takeSnapshot(tasks, ct);
+            frame = scheduler.takeSnapshot(tasks, currentTime++);
             newFrameAvailable.set(true);
 
             try {
                 Thread.sleep(SimulationManager.timeUnitDuration);
             } catch (InterruptedException e) {
-                scheduler.stop();
                 logFinish();
+                running.set(false);
+                scheduler.stop();
                 Thread.currentThread().interrupt();
             }
         }
@@ -132,6 +147,7 @@ public class SimulationManager implements Runnable {
 
     public SimulationFrame getSimulationFrame() {
         newFrameAvailable.set(false);
+
         return frame;
     }
 }

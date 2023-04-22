@@ -27,20 +27,20 @@ public class SimulationView extends JFrame {
 
     private JButton stopButton;
 
-    private static int row(int rowNumber) {
-        return MARGIN_Y + rowNumber * (ROW_HEIGHT + ROW_GAP);
-    }
-
-    private static int col(int colNumber) {
-        return MARGIN_X + colNumber * (COL_WIDTH + COL_GAP);
-    }
-
     public SimulationView() {
         setLayout(null);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         stopButton = new JButton("Stop Simulation");
+    }
+
+    private static int row(int rowNumber) {
+        return MARGIN_Y + rowNumber * (ROW_HEIGHT + ROW_GAP);
+    }
+
+    private static int col(int colNumber) {
+        return MARGIN_X + colNumber * (COL_WIDTH + COL_GAP);
     }
 
     public void setFrame(SimulationFrame frame) {
@@ -60,18 +60,20 @@ public class SimulationView extends JFrame {
         l.setBounds(col(0), row(1), COL_WIDTH, ROW_HEIGHT);
         add(l);
 
-        if (frame.getRemainingTasks().size() == 0)
-            Logger.log("none", LogLevel.SIMULATION_FRAME);
-
-        for (int i = 0; i < remainingTasks.size(); i++) {
-            var task = remainingTasks.get(i);
-
-            Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
-
-            l = new JLabel(task.toString());
-            l.setBounds(col(i + 1), row(1), COL_WIDTH, ROW_HEIGHT);
+        if (remainingTasks.size() == 0) {
+            Logger.log("None", LogLevel.SIMULATION_FRAME);
+            l = new JLabel("None");
+            l.setBounds(col(1), row(1), COL_WIDTH, ROW_HEIGHT);
             add(l);
-        }
+        } else
+            for (int i = 0; i < remainingTasks.size(); i++) {
+                var task = remainingTasks.get(i);
+
+                Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
+                l = new JLabel(task.toString());
+                l.setBounds(col(i + 1), row(1), COL_WIDTH, ROW_HEIGHT);
+                add(l);
+            }
 
         Logger.logLine("", LogLevel.SIMULATION_FRAME);
 
@@ -79,25 +81,26 @@ public class SimulationView extends JFrame {
 
         for (int i = 0; i < queues.size(); i++) {
             Logger.log("Queue " + i + ": ", LogLevel.SIMULATION_FRAME);
-
-            var queue = queues.get(i);
-
-            if (queue.size() == 0)
-                Logger.log("closed", LogLevel.SIMULATION_FRAME);
-
             l = new JLabel("Queue " + (i + 1));
             l.setBounds(col(0), row(i + 2), COL_WIDTH, ROW_HEIGHT);
             add(l);
 
-            for (int j = 0; j < queue.size(); j++) {
-                var task = queue.get(j);
+            var queue = queues.get(i);
 
-                Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
-
-                l = new JLabel(task.toString());
-                l.setBounds(col(j + 1), row(i + 2), COL_WIDTH, ROW_HEIGHT);
+            if (queue.size() == 0) {
+                Logger.log("Closed", LogLevel.SIMULATION_FRAME);
+                l = new JLabel("Closed");
+                l.setBounds(col(1), row(i + 2), COL_WIDTH, ROW_HEIGHT);
                 add(l);
-            }
+            } else
+                for (int j = 0; j < queue.size(); j++) {
+                    var task = queue.get(j);
+
+                    Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
+                    l = new JLabel(task.toString());
+                    l.setBounds(col(j + 1), row(i + 2), COL_WIDTH, ROW_HEIGHT);
+                    add(l);
+                }
 
             Logger.logLine("", LogLevel.SIMULATION_FRAME);
         }

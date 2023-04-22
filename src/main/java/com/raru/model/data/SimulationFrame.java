@@ -1,6 +1,7 @@
 package com.raru.model.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class SimulationFrame {
@@ -8,9 +9,9 @@ public class SimulationFrame {
     private final List<Task> remainingTasks;
     private int simulationTime;
 
-    public SimulationFrame(List<Task> remainingTasks, int simulationTime) {
+    public SimulationFrame(Collection<Task> remainingTasks, int simulationTime) {
         this.queues = new ArrayList<>();
-        this.remainingTasks = remainingTasks;
+        this.remainingTasks = new ArrayList<>(remainingTasks);
         this.simulationTime = simulationTime;
     }
 

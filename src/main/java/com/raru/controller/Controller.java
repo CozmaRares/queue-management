@@ -32,6 +32,7 @@ public class Controller {
                 int maxArrivalTime = Integer.parseInt(setupView.getMaxArrivalTime());
                 int numberOfServers = Integer.parseInt(setupView.getNumberOfServers());
                 int timeUnitDuration = Integer.parseInt(setupView.getTimeUnitDuration());
+                int maxQueueSize = Integer.parseInt(setupView.getMaxQueueSize());
 
                 String logFile = setupView.getLogFileName() + ".log";
                 LogLevel level = LogLevel.values()[setupView.getSelectedLogLevelIndex()];
@@ -41,6 +42,7 @@ public class Controller {
                 Logger.openFile(logFile);
 
                 SimulationManager.setTimeUnitDuration(timeUnitDuration);
+                SimulationManager.setMaxQueueSize(maxQueueSize);
 
                 manager = new SimulationManager(
                         timeLimit,
