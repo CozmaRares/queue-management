@@ -3,7 +3,7 @@ package com.raru.model;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import com.raru.model.data.SimulationFrame;
 import com.raru.model.data.Task;
@@ -17,9 +17,7 @@ public class SimulationManager implements Runnable {
     private int timeLimit;
     private Queue<Task> tasks;
     private Scheduler scheduler;
-    private volatile SimulationFrame frame;
-    private AtomicBoolean newFrameAvailable;
-    private AtomicBoolean running;
+    Consumer<SimulationFrame> setFrame;
 
     public SimulationManager(
             int timeLimit,
@@ -29,9 +27,12 @@ public class SimulationManager implements Runnable {
             int maxArrivalTime,
             int numberOfTasks,
             int numberOfServers,
-            PartitionPolicy policy) {
+            PartitionPolicy policy,
+            Consumer<SimulationFrame> setFrame) {
 
+        this.setFrame = setFrame;
         this.timeLimit = timeLimit;
+        this.scheduler = new Scheduler(numberOfServers, policy);
 
         this.tasks = SimulationManager.generateTasks(
                 numberOfTasks,
@@ -39,11 +40,6 @@ public class SimulationManager implements Runnable {
                 maxServingTime,
                 minArrivalTime,
                 maxArrivalTime);
-
-        this.scheduler = new Scheduler(numberOfServers, policy);
-
-        this.newFrameAvailable = new AtomicBoolean(false);
-        this.running = new AtomicBoolean(false);
     }
 
     public static Queue<Task> generateTasks(
@@ -79,60 +75,36 @@ public class SimulationManager implements Runnable {
     public void run() {
         int currentTime = 0;
 
-        running.set(true);
         logStart();
 
-        while (currentTime <= timeLimit && running.get()) {
-            var task = tasks.peek();
+        try {
+            while (currentTime <= timeLimit) {
+                var task = tasks.peek();
 
-            while (task != null && task.getArrivalTime() <= currentTime) {
-                Logger.logLine("Dispatching task: " + task, LogLevel.TASK_PARTITION);
+                while (task != null && task.getArrivalTime() <= currentTime) {
+                    Logger.logLine("Dispatching task: " + task, LogLevel.TASK_PARTITION);
 
-                if (!scheduler.dispatchTask(task))
+                    if (!scheduler.dispatchTask(task))
+                        break;
+
+                    tasks.remove();
+                    task = tasks.peek();
+                }
+
+                var frame = scheduler.takeSnapshot(tasks, currentTime++);
+                setFrame.accept(frame);
+
+                if (frame.isEmpty())
                     break;
 
-                tasks.remove();
-                task = tasks.peek();
-            }
-
-            frame = scheduler.takeSnapshot(tasks, currentTime++);
-            newFrameAvailable.set(true);
-
-            if (frame.isEmpty()) {
-                running.set(false);
-                break;
-            }
-
-            try {
                 Thread.sleep(Global.getTimeUnitDuration());
-            } catch (InterruptedException e) {
-                logFinish();
-                running.set(false);
-                scheduler.stop();
-                Thread.currentThread().interrupt();
             }
+        } catch (InterruptedException e) {
         }
 
+        setFrame.accept(null);
+
         logFinish();
-        running.set(false);
         scheduler.stop();
-    }
-
-    public void stop() {
-        running.set(false);
-    }
-
-    public boolean isRunning() {
-        return running.get();
-    }
-
-    public boolean isNewFrameAvailable() {
-        return newFrameAvailable.get();
-    }
-
-    public SimulationFrame getSimulationFrame() {
-        newFrameAvailable.set(false);
-
-        return frame;
     }
 }

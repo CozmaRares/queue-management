@@ -63,9 +63,6 @@ public class Server implements Runnable {
 
             }
         } catch (InterruptedException e) {
-            logFinish();
-            stop();
-            Thread.currentThread().interrupt();
         }
 
         logFinish();

@@ -52,17 +52,11 @@ public class Controller {
                         maxArrivalTime,
                         numberOfTasks,
                         numberOfServers,
-                        policy);
+                        policy,
+                        simulationView::setFrame);
 
                 managerThread = new Thread(manager);
                 managerThread.start();
-
-                var updater = new SimulationUpdater(
-                        manager::isRunning,
-                        manager::isNewFrameAvailable,
-                        manager::getSimulationFrame,
-                        simulationView::setFrame);
-                new Thread(updater).start();
 
                 setupView.setVisible(false);
                 simulationView.setVisible(true);
@@ -75,7 +69,7 @@ public class Controller {
             @Override
             public void actionPerformed(ActionEvent event) {
                 try {
-                    manager.stop();
+                    managerThread.interrupt();
                     managerThread.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
