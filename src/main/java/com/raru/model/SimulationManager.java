@@ -24,6 +24,7 @@ public class SimulationManager implements Runnable {
     private int totalWaitingTime;
     private int peakHour;
     private int peakHourTasks;
+    private double averageServiceTime;
 
     public SimulationManager(
             int timeLimit,
@@ -50,6 +51,12 @@ public class SimulationManager implements Runnable {
                 maxServingTime,
                 minArrivalTime,
                 maxArrivalTime);
+
+        this.averageServiceTime = (double) this.generatedTasks
+                .stream()
+                .reduce(0, (sum, element) -> sum + element.getServiceTime(), Integer::sum);
+        this.averageServiceTime /= numberOfTasks;
+
     }
 
     public static List<Task> generateTasks(
@@ -129,6 +136,7 @@ public class SimulationManager implements Runnable {
 
             double averageWaitingTime = (double) totalWaitingTime / numberOfServers / currentTime;
             Logger.logLine(String.format("Average waiting time: %.3f\n", averageWaitingTime));
+            Logger.logLine(String.format("Average service time: %.3f\n", averageServiceTime));
             Logger.logLine(String.format("Peak hour: %d", peakHour));
 
             setFrame.accept(null);
