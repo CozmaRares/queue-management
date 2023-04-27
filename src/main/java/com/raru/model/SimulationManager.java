@@ -8,14 +8,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.raru.model.data.SimulationFrame;
 import com.raru.model.data.Task;
 import com.raru.model.strategy.PartitionPolicy;
+import com.raru.utils.Global;
 import com.raru.utils.Logger;
 import com.raru.utils.Util;
 import com.raru.utils.Logger.LogLevel;
 
 public class SimulationManager implements Runnable {
-    private static int timeUnitDuration = 1000;
-    private static int maxQueueSize = 5;
-
     private int timeLimit;
     private Queue<Task> tasks;
     private Scheduler scheduler;
@@ -46,24 +44,6 @@ public class SimulationManager implements Runnable {
 
         this.newFrameAvailable = new AtomicBoolean(false);
         this.running = new AtomicBoolean(false);
-    }
-
-    public static void setTimeUnitDuration(int durationMs) {
-        SimulationManager.timeUnitDuration = durationMs;
-    }
-
-    public static int getTimeUnitDuration() {
-        return SimulationManager.timeUnitDuration;
-    }
-
-    public static void setMaxQueueSize(int maxQueueSize) {
-        SimulationManager.maxQueueSize = maxQueueSize;
-    }
-
-    public static int getMaxQueueSize() {
-        return SimulationManager.maxQueueSize != -1
-                ? SimulationManager.maxQueueSize
-                : Integer.MAX_VALUE;
     }
 
     public static Queue<Task> generateTasks(
@@ -124,14 +104,13 @@ public class SimulationManager implements Runnable {
             }
 
             try {
-                Thread.sleep(SimulationManager.timeUnitDuration);
+                Thread.sleep(Global.getTimeUnitDuration());
             } catch (InterruptedException e) {
                 logFinish();
                 running.set(false);
                 scheduler.stop();
                 Thread.currentThread().interrupt();
             }
-
         }
 
         logFinish();

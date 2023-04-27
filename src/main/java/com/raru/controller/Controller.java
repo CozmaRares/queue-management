@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import com.raru.model.SimulationManager;
 import com.raru.model.strategy.PartitionPolicy;
+import com.raru.utils.Global;
 import com.raru.utils.Logger;
 import com.raru.utils.Logger.LogLevel;
 import com.raru.view.SetupView;
@@ -24,6 +25,7 @@ public class Controller {
             @Override
             public void actionPerformed(ActionEvent event) {
                 int timeLimit = Integer.parseInt(setupView.getTimeLimit());
+                int maxQueueSize = Integer.parseInt(setupView.getMaxQueueSize());
                 int numberOfTasks = Integer.parseInt(setupView.getNumberOfTasks());
                 int minServingTime = Integer.parseInt(setupView.getMinServingTime());
                 int maxServingTime = Integer.parseInt(setupView.getMaxServingTime());
@@ -31,7 +33,6 @@ public class Controller {
                 int maxArrivalTime = Integer.parseInt(setupView.getMaxArrivalTime());
                 int numberOfServers = Integer.parseInt(setupView.getNumberOfServers());
                 int timeUnitDuration = Integer.parseInt(setupView.getTimeUnitDuration());
-                int maxQueueSize = Integer.parseInt(setupView.getMaxQueueSize());
 
                 String logFile = setupView.getLogFileName() + ".log";
                 LogLevel level = LogLevel.values()[setupView.getSelectedLogLevelIndex()];
@@ -40,8 +41,8 @@ public class Controller {
                 Logger.setLevel(level);
                 Logger.openFile(logFile);
 
-                SimulationManager.setTimeUnitDuration(timeUnitDuration);
-                SimulationManager.setMaxQueueSize(maxQueueSize);
+                Global.setTimeUnitDuration(timeUnitDuration);
+                Global.setMaxQueueSize(maxQueueSize);
 
                 manager = new SimulationManager(
                         timeLimit,

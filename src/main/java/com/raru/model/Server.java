@@ -1,7 +1,5 @@
 package com.raru.model;
 
-import static com.raru.model.SimulationManager.getTimeUnitDuration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -11,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.raru.model.data.Task;
 import com.raru.model.data.Task.MutableTask;
+import com.raru.utils.Global;
 import com.raru.utils.Logger;
 import com.raru.utils.Logger.LogLevel;
 
@@ -40,7 +39,7 @@ public class Server implements Runnable {
     }
 
     private void sleep() throws InterruptedException {
-        Thread.sleep(getTimeUnitDuration());
+        Thread.sleep(Global.getTimeUnitDuration());
     }
 
     @Override
