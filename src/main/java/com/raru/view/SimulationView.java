@@ -6,7 +6,6 @@ import javax.swing.*;
 
 import com.raru.model.data.SimulationFrame;
 import com.raru.utils.Logger;
-import com.raru.utils.Logger.LogLevel;
 
 public class SimulationView extends JFrame {
     private static final int MARGIN_X = 10;
@@ -56,7 +55,7 @@ public class SimulationView extends JFrame {
     }
 
     private void updateFrameFinished() {
-        Logger.logLine("Finished", LogLevel.SIMULATION_FRAME);
+        Logger.logLine("Finished");
 
         var l = new JLabel("Finished");
         l.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(1), COL_WIDTH, ROW_HEIGHT);
@@ -68,7 +67,7 @@ public class SimulationView extends JFrame {
     }
 
     private void updateFrame(SimulationFrame frame) {
-        Logger.logLine("Time: " + frame.getSimulationTime(), LogLevel.SIMULATION_FRAME);
+        Logger.logLine("Time: " + frame.getSimulationTime());
 
         var l = new JLabel("Time: " + frame.getSimulationTime());
         l.setBounds(col(0), row(0), COL_WIDTH, ROW_HEIGHT);
@@ -76,14 +75,14 @@ public class SimulationView extends JFrame {
 
         var remainingTasks = frame.getRemainingTasks();
 
-        Logger.log("Remaining tasks: ", LogLevel.SIMULATION_FRAME);
+        Logger.log("Remaining tasks: ");
 
         l = new JLabel("Remaining tasks");
         l.setBounds(col(0), row(1), COL_WIDTH, ROW_HEIGHT);
         add(l);
 
         if (remainingTasks.size() == 0) {
-            Logger.log("None", LogLevel.SIMULATION_FRAME);
+            Logger.log("None");
             l = new JLabel("None");
             l.setBounds(col(1), row(1), COL_WIDTH, ROW_HEIGHT);
             add(l);
@@ -91,47 +90,64 @@ public class SimulationView extends JFrame {
             for (int i = 0; i < remainingTasks.size(); i++) {
                 var task = remainingTasks.get(i);
 
-                Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
+                Logger.log(task + " ");
                 l = new JLabel(task.toString());
                 l.setBounds(col(i + 1), row(1), COL_WIDTH, ROW_HEIGHT);
                 add(l);
             }
 
-        Logger.logLine("", LogLevel.SIMULATION_FRAME);
+        var waitingTasks = frame.getWaitingTasks();
+
+        Logger.log("\nWaiting tasks: ");
+
+        l = new JLabel("Waiting tasks");
+        l.setBounds(col(0), row(2), COL_WIDTH, ROW_HEIGHT);
+        add(l);
+
+        if (waitingTasks.size() == 0) {
+            Logger.log("None");
+            l = new JLabel("None");
+            l.setBounds(col(1), row(2), COL_WIDTH, ROW_HEIGHT);
+            add(l);
+        } else
+            for (int i = 0; i < waitingTasks.size(); i++) {
+                var task = waitingTasks.get(i);
+
+                Logger.log(task + " ");
+                l = new JLabel(task.toString());
+                l.setBounds(col(i + 1), row(2), COL_WIDTH, ROW_HEIGHT);
+                add(l);
+            }
 
         var queues = frame.getQueues();
 
         for (int i = 0; i < queues.size(); i++) {
-            Logger.log("Queue " + i + ": ", LogLevel.SIMULATION_FRAME);
+            Logger.log("\nQueue " + i + ": ");
             l = new JLabel("Queue " + (i + 1));
-            l.setBounds(col(0), row(i + 2), COL_WIDTH, ROW_HEIGHT);
+            l.setBounds(col(0), row(i + 3), COL_WIDTH, ROW_HEIGHT);
             add(l);
 
-            var queue = queues.get(i);
+            var queue = queues.get(i).first;
 
             if (queue.size() == 0) {
-                Logger.log("Closed", LogLevel.SIMULATION_FRAME);
+                Logger.log("Closed");
                 l = new JLabel("Closed");
-                l.setBounds(col(1), row(i + 2), COL_WIDTH, ROW_HEIGHT);
+                l.setBounds(col(1), row(i + 3), COL_WIDTH, ROW_HEIGHT);
                 add(l);
             } else
                 for (int j = 0; j < queue.size(); j++) {
                     var task = queue.get(j);
 
-                    Logger.log(task + " ", LogLevel.SIMULATION_FRAME);
+                    Logger.log(task + " ");
                     l = new JLabel(task.toString());
-                    l.setBounds(col(j + 1), row(i + 2), COL_WIDTH, ROW_HEIGHT);
+                    l.setBounds(col(j + 1), row(i + 3), COL_WIDTH, ROW_HEIGHT);
                     add(l);
                 }
-
-            Logger.logLine("", LogLevel.SIMULATION_FRAME);
         }
 
-        Logger.logLine("", LogLevel.SIMULATION_FRAME);
-        Logger.logLine("", LogLevel.SIMULATION_FRAME);
-        Logger.logLine("", LogLevel.SIMULATION_FRAME);
+        Logger.log("\n\n\n");
 
-        stopButton.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(queues.size() + 2), COL_WIDTH, ROW_HEIGHT);
+        stopButton.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(queues.size() + 3), COL_WIDTH, ROW_HEIGHT);
         add(stopButton);
     }
 

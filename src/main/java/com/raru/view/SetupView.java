@@ -9,7 +9,6 @@ import javax.swing.*;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.utils.NumberField;
 import com.raru.utils.Util;
-import com.raru.utils.Logger.LogLevel;
 
 public class SetupView extends JFrame {
     private static final int MARGIN_X = 10;
@@ -32,14 +31,13 @@ public class SetupView extends JFrame {
     private static final int NUM_TASKS_ROW = row(5);
     private static final int NUM_SERVERS_ROW = row(6);
     private static final int POLICY_ROW = row(7);
-    private static final int LOG_ROW = row(8);
-    private static final int PATH_ROW = row(9);
-    private static final int DURATION_ROW = row(10);
-    private static final int MAX_Q_SIZE_ROW = row(11);
-    private static final int START_ROW = row(12);
+    private static final int PATH_ROW = row(8);
+    private static final int DURATION_ROW = row(9);
+    private static final int MAX_Q_SIZE_ROW = row(10);
+    private static final int START_ROW = row(11);
 
     private static final int WINDOW_WIDTH = MARGIN_X * 2 + COL_GAP + COL_WIDTH * 2;
-    private static final int WINDOW_HEIGHT = row(13) + ROW_HEIGHT + MARGIN_Y;
+    private static final int WINDOW_HEIGHT = row(12) + ROW_HEIGHT + MARGIN_Y;
 
     NumberField timeLimitField;
     NumberField minServingTimeField;
@@ -49,7 +47,6 @@ public class SetupView extends JFrame {
     NumberField numberOfTasksField;
     NumberField numberOfServersField;
     Choice policyChoice;
-    Choice logChoice;
     JTextField pathField;
     JButton startButton;
     NumberField durationField;
@@ -115,17 +112,6 @@ public class SetupView extends JFrame {
         policyChoice.setBackground(Color.WHITE);
         for (var policy : PartitionPolicy.values())
             policyChoice.add(Util.formatWords(policy.name()));
-
-        var logLabel = new JLabel("Log level:");
-        logChoice = new Choice();
-        logLabel.setBounds(LABEL_COL, LOG_ROW, COL_WIDTH, ROW_HEIGHT);
-        logChoice.setBounds(SETTING_COL, LOG_ROW, COL_WIDTH, ROW_HEIGHT);
-        add(logLabel);
-        add(logChoice);
-
-        logChoice.setBackground(Color.WHITE);
-        for (var level : LogLevel.values())
-            logChoice.add(Util.formatWords(level.name()));
 
         var pathLabel = new JLabel("Name of log file:");
         pathField = new JTextField("log");
@@ -195,10 +181,6 @@ public class SetupView extends JFrame {
 
     public int getSelectedPolicyIndex() {
         return policyChoice.getSelectedIndex();
-    }
-
-    public int getSelectedLogLevelIndex() {
-        return logChoice.getSelectedIndex();
     }
 
     public String getLogFileName() {

@@ -7,7 +7,6 @@ import com.raru.model.SimulationManager;
 import com.raru.model.strategy.PartitionPolicy;
 import com.raru.utils.Global;
 import com.raru.utils.Logger;
-import com.raru.utils.Logger.LogLevel;
 import com.raru.view.SetupView;
 import com.raru.view.SimulationView;
 
@@ -35,10 +34,8 @@ public class Controller {
                 int timeUnitDuration = Integer.parseInt(setupView.getTimeUnitDuration());
 
                 String logFile = setupView.getLogFileName() + ".log";
-                LogLevel level = LogLevel.values()[setupView.getSelectedLogLevelIndex()];
                 PartitionPolicy policy = PartitionPolicy.values()[setupView.getSelectedPolicyIndex()];
 
-                Logger.setLevel(level);
                 Logger.openFile(logFile);
 
                 Global.setTimeUnitDuration(timeUnitDuration);

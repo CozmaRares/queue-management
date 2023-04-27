@@ -52,10 +52,10 @@ public class Scheduler {
         });
     }
 
-    public SimulationFrame takeSnapshot(Collection<Task> remainingTasks, int simulationTime) {
-        var frame = new SimulationFrame(remainingTasks, simulationTime);
+    public SimulationFrame takeSnapshot(List<Task> remainingTasks, Collection<Task> waitingTasks, int simulationTime) {
+        var frame = new SimulationFrame(remainingTasks, waitingTasks, simulationTime);
 
-        servers.forEach(server -> frame.addQueue(server.getTasks()));
+        servers.forEach(server -> frame.addQueue(server.getTasks(), server.getWaitingTime()));
 
         return frame;
     }

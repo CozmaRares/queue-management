@@ -10,8 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.raru.model.data.Task;
 import com.raru.model.data.Task.MutableTask;
 import com.raru.utils.Global;
-import com.raru.utils.Logger;
-import com.raru.utils.Logger.LogLevel;
 
 public class Server implements Runnable {
     private BlockingQueue<MutableTask> tasks;
@@ -25,17 +23,8 @@ public class Server implements Runnable {
     }
 
     public void addTask(Task task) {
-        Logger.logLine("Server " + this + " received task " + task, LogLevel.TASK_PARTITION);
         tasks.add(task.toMutable());
         waitingTime.addAndGet(task.getServiceTime());
-    }
-
-    private void logStart() {
-        Logger.logLine("Server started: " + this, LogLevel.THREAD_LIFETIME);
-    }
-
-    private void logFinish() {
-        Logger.logLine("Server finished: " + this, LogLevel.THREAD_LIFETIME);
     }
 
     private void sleep() throws InterruptedException {
@@ -44,8 +33,6 @@ public class Server implements Runnable {
 
     @Override
     public void run() {
-        logStart();
-
         try {
             while (running.get()) {
                 MutableTask task = tasks.peek();
@@ -64,8 +51,6 @@ public class Server implements Runnable {
             }
         } catch (InterruptedException e) {
         }
-
-        logFinish();
     }
 
     public void stop() {
