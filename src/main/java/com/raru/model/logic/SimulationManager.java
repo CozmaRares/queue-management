@@ -72,7 +72,7 @@ public class SimulationManager implements Runnable {
             int serviceTime = Util.randomInt(minServiceTime, maxServiceTime + 1);
             int arrivalTime = Util.randomInt(minArrivalTime, maxArrivalTime + 1);
 
-            tasks.add(new Task(arrivalTime, serviceTime));
+            tasks.add(new Task(i + 1, arrivalTime, serviceTime));
         }
 
         tasks.sort((a, b) -> a.getArrivalTime() - b.getArrivalTime());
@@ -133,8 +133,8 @@ public class SimulationManager implements Runnable {
             }
 
             double averageWaitingTime = (double) totalWaitingTime / numberOfServers / currentTime;
-            Logger.logLine(String.format("Average waiting time: %.3f\n", averageWaitingTime));
-            Logger.logLine(String.format("Average service time: %.3f\n", averageServiceTime));
+            Logger.logLine(String.format("Average waiting time: %.3f", averageWaitingTime));
+            Logger.logLine(String.format("Average service time: %.3f", averageServiceTime));
             Logger.logLine(String.format("Peak hour: %d", peakHour));
 
             setFrame.accept(null);

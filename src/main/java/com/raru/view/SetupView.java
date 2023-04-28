@@ -23,13 +23,13 @@ public class SetupView extends JFrame {
     private static final int LABEL_COL = col(0);
     private static final int SETTING_COL = col(1);
 
-    private static final int TIME_LIMIT_ROW = row(0);
-    private static final int MIN_SERVICE_TIME_ROW = row(1);
-    private static final int MAX_SERVICE_TIME_ROW = row(2);
+    private static final int NUM_TASKS_ROW = row(0);
+    private static final int NUM_SERVERS_ROW = row(1);
+    private static final int TIME_LIMIT_ROW = row(2);
     private static final int MIN_ARRIVAL_TIME_ROW = row(3);
     private static final int MAX_ARRIVAL_TIME_ROW = row(4);
-    private static final int NUM_TASKS_ROW = row(5);
-    private static final int NUM_SERVERS_ROW = row(6);
+    private static final int MIN_SERVICE_TIME_ROW = row(5);
+    private static final int MAX_SERVICE_TIME_ROW = row(6);
     private static final int POLICY_ROW = row(7);
     private static final int PATH_ROW = row(8);
     private static final int DURATION_ROW = row(9);
@@ -68,7 +68,7 @@ public class SetupView extends JFrame {
         add(minServiceTimeField);
 
         var maxServiceTimeLabel = new JLabel("Max service time:");
-        maxServiceTimeField = new NumberField(30);
+        maxServiceTimeField = new NumberField(4);
         maxServiceTimeLabel.setBounds(LABEL_COL, MAX_SERVICE_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
         maxServiceTimeField.setBounds(SETTING_COL, MAX_SERVICE_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
         add(maxServiceTimeLabel);
@@ -82,7 +82,7 @@ public class SetupView extends JFrame {
         add(minArrivalTimeField);
 
         var maxArrivalTimeLabel = new JLabel("Max arrival time:");
-        maxArrivalTimeField = new NumberField(4);
+        maxArrivalTimeField = new NumberField(30);
         maxArrivalTimeLabel.setBounds(LABEL_COL, MAX_ARRIVAL_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
         maxArrivalTimeField.setBounds(SETTING_COL, MAX_ARRIVAL_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
         add(maxArrivalTimeLabel);

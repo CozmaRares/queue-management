@@ -1,20 +1,12 @@
 package com.raru.model.data;
 
 public class Task {
-    private static int counterID = 0;
-
     private final int id;
     private final int arrivalTime;
     protected int serviceTime;
 
-    protected Task(int id, int arrivalTime, int serviceTime) {
+    public Task(int id, int arrivalTime, int serviceTime) {
         this.id = id;
-        this.arrivalTime = arrivalTime;
-        this.serviceTime = serviceTime;
-    }
-
-    public Task(int arrivalTime, int serviceTime) {
-        this.id = Task.counterID++;
         this.arrivalTime = arrivalTime;
         this.serviceTime = serviceTime;
     }
@@ -43,10 +35,6 @@ public class Task {
     public static class MutableTask extends Task {
         protected MutableTask(int id, int arrivalTime, int serviceTime) {
             super(id, arrivalTime, serviceTime);
-        }
-
-        public MutableTask(int arrivalTime, int serviceTime) {
-            super(arrivalTime, serviceTime);
         }
 
         public void decreaseServiceTime() {
