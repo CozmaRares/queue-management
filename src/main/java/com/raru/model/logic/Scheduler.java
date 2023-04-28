@@ -1,4 +1,4 @@
-package com.raru.model;
+package com.raru.model.logic;
 
 import java.util.ArrayList;
 import java.util.Collection;

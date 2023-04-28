@@ -1,11 +1,10 @@
-package com.raru.model;
+package com.raru.model.logic;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.raru.model.data.Task;
 import com.raru.model.data.Task.MutableTask;
@@ -13,18 +12,18 @@ import com.raru.utils.Global;
 
 public class Server implements Runnable {
     private BlockingQueue<MutableTask> tasks;
-    private AtomicInteger waitingTime;
+    private int waitingTime;
     private AtomicBoolean running;
 
     public Server() {
         tasks = new LinkedBlockingQueue<>();
-        waitingTime = new AtomicInteger(0);
-        running = new AtomicBoolean(true);
+        waitingTime = 0;
+        running = new AtomicBoolean(false);
     }
 
-    public void addTask(Task task) {
+    public void receiveTask(Task task) {
         tasks.add(task.toMutable());
-        waitingTime.addAndGet(task.getServiceTime());
+        waitingTime += task.getServiceTime();
     }
 
     private void sleep() throws InterruptedException {
@@ -33,21 +32,21 @@ public class Server implements Runnable {
 
     @Override
     public void run() {
+        running.set(true);
+
         try {
             while (running.get()) {
-                MutableTask task = tasks.peek();
+                var task = tasks.peek();
 
                 if (task == null)
                     continue;
 
                 sleep();
                 task.decreaseServiceTime();
-                waitingTime.decrementAndGet();
+                waitingTime--;
 
-                if (task.getServiceTime() == 0) {
+                if (task.getServiceTime() == 0)
                     tasks.take();
-                }
-
             }
         } catch (InterruptedException e) {
         }
@@ -58,7 +57,7 @@ public class Server implements Runnable {
     }
 
     public int getWaitingTime() {
-        return waitingTime.get();
+        return waitingTime;
     }
 
     public int getNumberOfTasks() {

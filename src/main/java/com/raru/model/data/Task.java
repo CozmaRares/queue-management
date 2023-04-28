@@ -3,8 +3,8 @@ package com.raru.model.data;
 public class Task {
     private static int counterID = 0;
 
-    protected int id;
-    protected int arrivalTime;
+    private final int id;
+    private final int arrivalTime;
     protected int serviceTime;
 
     protected Task(int id, int arrivalTime, int serviceTime) {

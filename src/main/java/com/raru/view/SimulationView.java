@@ -55,7 +55,7 @@ public class SimulationView extends JFrame {
     }
 
     private void updateFrameFinished() {
-        Logger.logLine("Finished");
+        Logger.logLine("\nFinished");
 
         var l = new JLabel("Finished");
         l.setBounds((WINDOW_WIDTH - COL_WIDTH) / 2, row(1), COL_WIDTH, ROW_HEIGHT);

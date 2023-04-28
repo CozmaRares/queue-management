@@ -24,8 +24,8 @@ public class SetupView extends JFrame {
     private static final int SETTING_COL = col(1);
 
     private static final int TIME_LIMIT_ROW = row(0);
-    private static final int MIN_SERVING_TIME_ROW = row(1);
-    private static final int MAX_SERVING_TIME_ROW = row(2);
+    private static final int MIN_SERVICE_TIME_ROW = row(1);
+    private static final int MAX_SERVICE_TIME_ROW = row(2);
     private static final int MIN_ARRIVAL_TIME_ROW = row(3);
     private static final int MAX_ARRIVAL_TIME_ROW = row(4);
     private static final int NUM_TASKS_ROW = row(5);
@@ -39,18 +39,18 @@ public class SetupView extends JFrame {
     private static final int WINDOW_WIDTH = MARGIN_X * 2 + COL_GAP + COL_WIDTH * 2;
     private static final int WINDOW_HEIGHT = row(12) + ROW_HEIGHT + MARGIN_Y;
 
-    NumberField timeLimitField;
-    NumberField minServingTimeField;
-    NumberField maxServingTimeField;
-    NumberField minArrivalTimeField;
-    NumberField maxArrivalTimeField;
-    NumberField numberOfTasksField;
-    NumberField numberOfServersField;
-    Choice policyChoice;
-    JTextField pathField;
-    JButton startButton;
-    NumberField durationField;
-    NumberField maxQueueSize;
+    private NumberField timeLimitField;
+    private NumberField minServiceTimeField;
+    private NumberField maxServiceTimeField;
+    private NumberField minArrivalTimeField;
+    private NumberField maxArrivalTimeField;
+    private NumberField numberOfTasksField;
+    private NumberField numberOfServersField;
+    private Choice policyChoice;
+    private JTextField pathField;
+    private JButton startButton;
+    private NumberField durationField;
+    private NumberField maxQueueSize;
 
     public SetupView() {
         var timeLimitLabel = new JLabel("Time limit:");
@@ -60,19 +60,19 @@ public class SetupView extends JFrame {
         add(timeLimitLabel);
         add(timeLimitField);
 
-        var minServingTimeLabel = new JLabel("Min serving time:");
-        minServingTimeField = new NumberField(2);
-        minServingTimeLabel.setBounds(LABEL_COL, MIN_SERVING_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
-        minServingTimeField.setBounds(SETTING_COL, MIN_SERVING_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
-        add(minServingTimeLabel);
-        add(minServingTimeField);
+        var minServiceTimeLabel = new JLabel("Min service time:");
+        minServiceTimeField = new NumberField(2);
+        minServiceTimeLabel.setBounds(LABEL_COL, MIN_SERVICE_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
+        minServiceTimeField.setBounds(SETTING_COL, MIN_SERVICE_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
+        add(minServiceTimeLabel);
+        add(minServiceTimeField);
 
-        var maxServingTimeLabel = new JLabel("Max serving time:");
-        maxServingTimeField = new NumberField(30);
-        maxServingTimeLabel.setBounds(LABEL_COL, MAX_SERVING_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
-        maxServingTimeField.setBounds(SETTING_COL, MAX_SERVING_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
-        add(maxServingTimeLabel);
-        add(maxServingTimeField);
+        var maxServiceTimeLabel = new JLabel("Max service time:");
+        maxServiceTimeField = new NumberField(30);
+        maxServiceTimeLabel.setBounds(LABEL_COL, MAX_SERVICE_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
+        maxServiceTimeField.setBounds(SETTING_COL, MAX_SERVICE_TIME_ROW, COL_WIDTH, ROW_HEIGHT);
+        add(maxServiceTimeLabel);
+        add(maxServiceTimeField);
 
         var minArrivalTimeLabel = new JLabel("Min arrival time:");
         minArrivalTimeField = new NumberField(2);
@@ -114,7 +114,7 @@ public class SetupView extends JFrame {
             policyChoice.add(Util.formatWords(policy.name()));
 
         var pathLabel = new JLabel("Name of log file:");
-        pathField = new JTextField("log");
+        pathField = new JTextField("log.log");
         pathLabel.setBounds(LABEL_COL, PATH_ROW, COL_WIDTH, ROW_HEIGHT);
         pathField.setBounds(SETTING_COL, PATH_ROW, COL_WIDTH, ROW_HEIGHT);
         add(pathLabel);
@@ -155,12 +155,12 @@ public class SetupView extends JFrame {
         return timeLimitField.getText();
     }
 
-    public String getMinServingTime() {
-        return minServingTimeField.getText();
+    public String getMinServiceTime() {
+        return minServiceTimeField.getText();
     }
 
-    public String getMaxServingTime() {
-        return maxServingTimeField.getText();
+    public String getMaxServiceTime() {
+        return maxServiceTimeField.getText();
     }
 
     public String getMinArrivalTime() {

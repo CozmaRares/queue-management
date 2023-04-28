@@ -1,4 +1,4 @@
-package com.raru.model;
+package com.raru.model.logic;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,8 +28,8 @@ public class SimulationManager implements Runnable {
 
     public SimulationManager(
             int timeLimit,
-            int minServingTime,
-            int maxServingTime,
+            int minServiceTime,
+            int maxServiceTime,
             int minArrivalTime,
             int maxArrivalTime,
             int numberOfTasks,
@@ -47,8 +47,8 @@ public class SimulationManager implements Runnable {
 
         this.generatedTasks = SimulationManager.generateTasks(
                 numberOfTasks,
-                minServingTime,
-                maxServingTime,
+                minServiceTime,
+                maxServiceTime,
                 minArrivalTime,
                 maxArrivalTime);
 
@@ -59,20 +59,20 @@ public class SimulationManager implements Runnable {
 
     }
 
-    public static List<Task> generateTasks(
+    private static List<Task> generateTasks(
             int numberOfTasks,
-            int minServingTime,
-            int maxServingTime,
+            int minServiceTime,
+            int maxServiceTime,
             int minArrivalTime,
             int maxArrivalTime) {
 
         var tasks = new ArrayList<Task>(numberOfTasks);
 
         for (int i = 0; i < numberOfTasks; i++) {
-            int servingTime = Util.randomInt(minServingTime, maxServingTime + 1);
+            int serviceTime = Util.randomInt(minServiceTime, maxServiceTime + 1);
             int arrivalTime = Util.randomInt(minArrivalTime, maxArrivalTime + 1);
 
-            tasks.add(new Task(arrivalTime, servingTime));
+            tasks.add(new Task(arrivalTime, serviceTime));
         }
 
         tasks.sort((a, b) -> a.getArrivalTime() - b.getArrivalTime());
@@ -83,8 +83,6 @@ public class SimulationManager implements Runnable {
     @Override
     public void run() {
         int currentTime = 0;
-
-        Logger.log("Generated tasks: ");
 
         try {
             while (currentTime <= timeLimit) {
