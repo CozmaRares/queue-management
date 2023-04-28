@@ -96,7 +96,7 @@ generates the tasks, starts the scheduler and updates the simulation frame.
 
 __Global__ stores variables the need to be accessible to multiple classes.
 
-__Logger__ responsible for writing log messages (go figure).
+__Logger__ is responsible for writing log messages (go figure).
 
 __NumberField__ extends _JTextField_ and can only accept strings that represent valid numbers as input.
 
