@@ -1,114 +1,117 @@
-# Assignment 1 - Polynomial Calculator
+# Queue Management
 
-## 1. Assignment Objective
+## Description
 
-Design and implement an application aiming to analyze queuing-based systems by (1) simulating a
-series of N clients arriving for service, entering Q queues, waiting, being served and finally leaving the
-queues, and (2) computing the average waiting time, average service time and peak hour.
+An application that simulates queuing-based systems. It involves clients
+arriving, joining queues, waiting, getting served, and leaving. The application
+calculates key metrics such as average waiting time, average service time, and
+peak hour.
 
-## 2. Problem Analysis
+## Getting Started
 
-### Functional Requirements
+### Prerequisites
 
-* The application should allow users to setup the simulation
-* The application should allow users to start the simulation
-* The application should allow users to stop the simulation
-* The application should display the real-time queues
-evolution
-* The application should log the events of the simulation in a file
+- maven
 
-### Use Case
+  Debian/Ubuntu:
 
-__Use Case:__ Simulation Setup \
-__Primary Actor:__ user \
-__Main Success Scenario:__
+  ```sh
+  sudo apt install maven
+  ```
 
-1. The user changes the default setting of the simulation
-2. The user clicks on the _Start Simulation_ button
+- java 17 jdk
 
-__Use Case:__ Simulation \
-__Primary Actor:__ user \
-__Main Success Scenario:__
+  Debian/Ubuntu:
 
-1. The application displays the real-time evolution of the queues
-2. The user can go back to the setup step by clicking on the _Stop Simulation_ button
+  ```sh
+  sudo apt install openjdk-17-jdk openjdk-17-jre
+  ```
 
-## 3. Design
+### Installation
 
-### Level 1: Overall System Design
+1. Clone the repo
 
-![System Design](./docs/sys-design.png)
+   ```sh
+   git clone https://github.com/CozmaRares/queue-management.git
+   cd queue-management
+   ```
 
-### Level 2: Package Diagram
+2. Compile the code
 
-![Package Diagram](./docs/package-diagram.png)
+   ```sh
+   mvn compile
+   ```
 
-### Level 3: Class Diagram
+3. Run the code
 
-![Class Diagram](./docs/class-diagram.png)
+   ```sh
+   mvn exec:java
+   ```
 
-## 4. Implementation
+## Design
+
+**_Design Pattern - MVC:_**
+
+The project adheres to the Model-View-Controller (MVC) architectural pattern, a
+structured approach that separates the application into three distinct
+components: Model, View, and Controller.
+
+### Model
+
+1. **Data Classes:** The Data portion of the model comprises two essential classes:
+
+   - _Task_: Represents individual tasks or clients in the queuing system, each
+     requiring a specified amount of time for processing.
+   - _SimulationFrame_: Stores the state of each frame in the simulation,
+     facilitating the tracking of system dynamics over time.
+
+2. **Strategy:** The Strategy component introduces flexibility into the system
+   by offering two strategies for assigning clients (tasks) to queues (servers).
+   These strategies are:
+
+   - _Shortest Queue_: Assigns tasks to the queue with the fewest clients waiting.
+   - _Shortest Waiting Time_: Assigns tasks to the queue where clients are
+     expected to wait the least.
+
+3. **Logic Classes:**
+   - _SimulationManager class_: This integral class manages the entire queuing
+     simulation. It handles the arrival and processing of tasks over a specified
+     time period, calculates critical metrics like waiting time and peak hour, and
+     updates the system state as time progresses.
+   - _Scheduler class_: Responsible for partitioning each task to an appropriate
+     server based on the selected strategy.
+   - _Server class_: Manages the execution of each task within the designated queue.
+
+### View
+
+- _SetupView_: Provides an interface for users to input the simulation settings.
+  [^settings]
+- _SimulationView_: Offers a visual representation of the queuing simulation by
+  displaying received SimulationFrames.
 
 ### Controller
 
-The __Controller__ is responsible for creating the views, adding their event listeners and setting their visibilities based on the state of the application. This class is also responsible for creating the _SimulationManager_ and opening/closing the output file.
+The Controller component connects the GUI and the underlying logic. It adds
+functionality to the views, allowing users to interact with the simulation and
+configure its parameters as needed.
 
-### GUI
+## Reflection
 
-Both view classes (_SetupView_ and _SimulationView_) use a (handmade) grid layout.
+The Queue Management Project was developed as a college assignment within the
+Fundamental Programming Techniques class. The assignment's primary objective was
+to design and implement an application capable of simulating queuing-based
+systems. This simulation involved the arrival of N clients for service, their
+entry into Q queues, waiting, being served, and ultimately leaving the queues.
+The application was tasked with computing essential metrics, including average
+waiting time, average service time, and identifying the peak hour of system activity.
 
-__SetupView__ contains various fields that represent the settings of the simulation.
+The trickiest part of the project was making the multithreading work smoothly. I
+came up with a bit of a hack using Thread.sleep, but it caused a few hiccups
+with the Server's task queue that took quite a bit of time to resolve.
 
-__SimulationView__ receives a _SimulationFrame_ and displays it.
+I used Java, Maven for managing the project, and Java Swing
+for building the graphical interface.
 
-### Data Classes
-
-__Task__ contains the relevant information about the task, i.e. the unique ID, arrival time and service time.
-
-__SimulationFrame__ contains the relevant information about the simulation, i.e. the state of the queues, waiting tasks (tasks that have an arrival time less than the simulation's current time but have not been sent to a server) and remaining tasks (tasks that have not yet arrived).
-
-### Partition Strategy
-
-__PartitionStrategy__ is an interface that defines the structure of a strategy used to partition the tasks to the servers. It defines the _addTask_ method that receives the task and servers to choose from. The dispatching of a task could fail if the queues are full. The maximum queue size could be set to -1 meaning that the queue size is unlimited (ignoring physical limitations).
-
-__ShortestQueueStrategy__ defines the strategy for assigning a task to the server that has the least amount of tasks to be processed.
-
-__ShortestTimeStrategy__ defines the strategy for assigning a task to the server that has the least waiting time.
-
-The enum __PartitionPolicy__ is used to select the desired partition strategy.
-
-### Business Logic
-
-__Server__  is responsible for processing the tasks. It receives a task through the _receiveTask_ method and can be stopped with the _stop_ method.
-
-Synchronized structures used:
-
-* _BlockingQueue_: used to avoid race conditions, i.e. when having an empty queue the server receives a task but only processes it on the next iteration
-* _AtomicBoolean_: used for same reason as _BlockingQueue_, i.e. server is stopped, but it runs one more iteration
-
-__Scheduler__ manages the servers, the task assignment and the generation of the _SimulationFrame_.
-
-__SimulationManager__ is the main actor of the simulation. It receives the desired simulation settings and generates tasks with random values between the specified interval and dispatches them to the servers, via the _Scheduler_.
-
-generates the tasks, starts the scheduler and updates the simulation frame.
-
-### Utilities
-
-__Global__ stores variables the need to be accessible to multiple classes.
-
-__Logger__ is responsible for writing log messages (go figure).
-
-__NumberField__ extends _JTextField_ and can only accept strings that represent valid numbers as input.
-
-__Tuple__ is an immutable pair of objects.
-
-__Util__ contains 2 methods that:
-
-* generate random integers
-* replace the underscores in a string with spaces, and capitalize the words
-
-## 5. Biography
-
-* [The Mecca of Programmers](https://stackoverflow.com/)
-* [Java Documentation](https://docs.oracle.com/)
-* The Provided Laboratory Materials
+[^settings]:
+    If the queue size is set to -1, the queues will be treated as having no maximum size and
+    will accept all available tasks.
