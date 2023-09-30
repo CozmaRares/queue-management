@@ -7,6 +7,16 @@ arriving, joining queues, waiting, getting served, and leaving. The application
 calculates key metrics such as average waiting time, average service time, and
 peak hour.
 
+## Screenshots
+
+### Choosing the settings of the simulation
+
+![settings view](./screenshots/settings.png)
+
+### Simulation
+
+![simulation](./screenshots/simulation.png)
+
 ## Getting Started
 
 ### Prerequisites
@@ -109,8 +119,8 @@ The trickiest part of the project was making the multithreading work smoothly. I
 came up with a bit of a hack using Thread.sleep, but it caused a few hiccups
 with the Server's task queue that took quite a bit of time to resolve.
 
-I used Java, Maven for managing the project, and Java Swing
-for building the graphical interface.
+The project employed Java as the main language, Maven for project management,
+Java Swing for the user interface, and tackled multithreading for task handling.
 
 [^settings]:
     If the queue size is set to -1, the queues will be treated as having no maximum size and
